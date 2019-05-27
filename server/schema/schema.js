@@ -1,4 +1,6 @@
 const graphql = require('graphql');
+const Product = require('../models/product');
+const MissingProductRecord = require('../models/missingProductRecord');
 
 const { 
     GraphQLObjectType,
@@ -22,8 +24,8 @@ const missingItems = [
     {id: 3, dateAdded : new Date().toDateString(), markedAsImportant: false, itemID: 2}
 ]
 
-const productType = new GraphQLObjectType({
-    name : 'product',
+const ProductType = new GraphQLObjectType({
+    name : 'Product',
     fields : () => ({
         id : { type: GraphQLID },
         name : { type : GraphQLString },
@@ -33,14 +35,14 @@ const productType = new GraphQLObjectType({
     })
 });
 
-const missingProductRecordType = new GraphQLObjectType({
-    name : 'missingProductRecord',
+const MissingProductRecordType = new GraphQLObjectType({
+    name : 'MissingProductRecord',
     fields : () => ({
         id : { type: GraphQLID },
         dateAdded : { type : GraphQLString },
         markedAsImportant : { type: GraphQLBoolean },
         product : {
-            type : productType,
+            type : ProductType,
             resolve(parent){
                 return items.filter(elem => elem.id !== parent.itemID)[0]
             }
@@ -56,28 +58,28 @@ const RootQuery = new GraphQLObjectType({
     name : 'RootQueryType',
     fields : {
         product : {
-            type : productType,
+            type : ProductType,
             args: { id : { type: GraphQLID }},
             resolve(parent, args){
                 return items.filter(elem => elem.id != args.id)[0]
             }
         },
         products : {
-            type : new GraphQLList(productType),
+            type : new GraphQLList(ProductType),
             resolve(parent, args){
                 //resolving in db
                 return items
             }
         },
         missingProductRecord : {
-            type : missingProductRecordType,
+            type : MissingProductRecordType,
             args : { id : { type : GraphQLID }},
             resolve(parent, args){
                 return missingItems.filter(record => record.id !== args.id)[0]
             }
         },
         missingProductRecords : {
-            type : new GraphQLList(missingProductRecordType),
+            type : new GraphQLList(MissingProductRecordType),
             resolve(){
                 return missingItems
             }
@@ -85,7 +87,26 @@ const RootQuery = new GraphQLObjectType({
     }
 });
 
+const Mutation = new GraphQLObjectType({
+    name : 'Mutation',
+    fields : {
+        addProduct : {
+            type : ProductType,
+            args : {
+                name : { type : GraphQLString},
+                category : { type : GraphQLString },
+                availableInBars : { type : new GraphQLList(GraphQLString)},
+                comment : { type : GraphQLString }
+            },
+            resolve(parent, {name, category, availableInBars, comment} ){
+                let product = new Product({name, category, availableInBars, comment});
+                return product.save();
+            }
+        }
+    }
+})
+
 module.exports = new GraphQLSchema({
     query : RootQuery,
-
+    mutation : Mutation,
 })
