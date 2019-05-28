@@ -5,13 +5,16 @@ const mongoose = require("mongoose");
 const path = require("path");
 const cors = require("cors");
 
+require('dotenv').config();
+
 const app = express();
+
 //cross origin request
 app.use(cors())
 
 //OBS! need to take this data into .env
 mongoose.connect(
-  "mongodb+srv://admin:reffen123@cluster0-nvtf4.mongodb.net/test?retryWrites=true"
+  `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0-nvtf4.mongodb.net/test?retryWrites=true`
 );
 mongoose.connection.once("open", () => {
   console.log("connected to database");
