@@ -2,7 +2,7 @@
   "name": "out-of-stock-server",
   "version": "1.0.0",
   "description": "",
-  "main": "server/index.js",
+  "main": "server/app.js",
   "scripts": {
     "start": "node server/app.js",
     "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
