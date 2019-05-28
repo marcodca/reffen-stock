@@ -12,7 +12,6 @@ const app = express();
 //cross origin request
 app.use(cors())
 
-//OBS! need to take this data into .env
 mongoose.connect(
   `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0-nvtf4.mongodb.net/test?retryWrites=true`
 );
