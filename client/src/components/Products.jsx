@@ -13,11 +13,15 @@ const getProductsQuery = gql`
   }
 `
 
-const Products = (props) => {
-    console.log(props);
+const Products = ({data}) => {
+    console.log(data);
     return (
         <h3>
-            Here we are trying to outpeut some date from the products!
+            Here we are trying to output some date from the products!
+            <ul>
+                {data.products && data.products.map( product => <li key={product.id}>{product.name}</li>)}
+            </ul>
+
         </h3>
     )
 }
