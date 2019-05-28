@@ -14,6 +14,15 @@ mongoose.connection.once("open", () => {
   console.log("connected to database");
 });
 
+//Single endpoint for graphql
+app.use(
+    "/graphql",
+    graphqlHTTP({
+      schema,
+      graphiql: true
+    })
+  );
+
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../client/build")));
 
@@ -21,15 +30,6 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.join(__dirname, "client/build", "index.html"));
   });
 }
-
-//Single endpoint for graphql
-app.use(
-  "/graphql",
-  graphqlHTTP({
-    schema,
-    graphiql: true
-  })
-);
 
 const port = process.env.PORT || 4000;
 
