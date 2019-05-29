@@ -2,7 +2,7 @@ import React from 'react';
 import { gql } from 'apollo-boost';
 import { graphql } from 'react-apollo';
 
-const getProductsQuery = gql`
+export const getProductsQuery = gql`
 {
     products{
       name
@@ -14,7 +14,6 @@ const getProductsQuery = gql`
 `
 
 const Products = ({data}) => {
-    console.log(data);
     return (
         <h3>
             Here we are trying to output some date from the products!

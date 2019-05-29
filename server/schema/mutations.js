@@ -21,9 +21,10 @@ const Mutation = new GraphQLObjectType({
           name: { type: GraphQLNonNull(GraphQLString) },
           category: { type: GraphQLNonNull(GraphQLString) },
           availableInBars: { type: GraphQLNonNull(new GraphQLList(GraphQLString)) },
-          comment: { type: GraphQLNonNull(GraphQLString) }
+          comment: { type: GraphQLString }
         },
         resolve(parent, { name, category, availableInBars, comment }) {
+     
           let product = new Product({ name, category, availableInBars, comment });
   
           return product.save();
@@ -45,6 +46,13 @@ const Mutation = new GraphQLObjectType({
           });
       
           return missingProductRecord.save();
+        }
+      },
+      deleteMissingProductRecord : {
+        type : MissingProductRecordType,
+        args : { id : { type: GraphQLNonNull(GraphQLID) }},
+        resolve(parent, {id}){
+          return MissingProductRecord.findByIdAndDelete(id)
         }
       }
     }
