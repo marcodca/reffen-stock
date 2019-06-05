@@ -16,7 +16,7 @@ const ProductType = new GraphQLObjectType({
       name: { type: GraphQLString },
       category: { type: GraphQLString },
       availableInBars: { type: new GraphQLList(GraphQLString) },
-      comment: { type: GraphQLString }
+      description: { type: GraphQLString }
     })
   });
   

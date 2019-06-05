@@ -21,11 +21,10 @@ const Mutation = new GraphQLObjectType({
           name: { type: GraphQLNonNull(GraphQLString) },
           category: { type: GraphQLNonNull(GraphQLString) },
           availableInBars: { type: GraphQLNonNull(new GraphQLList(GraphQLString)) },
-          comment: { type: GraphQLString }
+          description: { type: GraphQLString }
         },
-        resolve(parent, { name, category, availableInBars, comment }) {
-     
-          let product = new Product({ name, category, availableInBars, comment });
+        resolve(parent, { name, category, availableInBars, description }) {
+          let product = new Product({ name, category, availableInBars, description });
   
           return product.save();
         }
