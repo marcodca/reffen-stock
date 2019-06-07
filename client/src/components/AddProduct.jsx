@@ -12,9 +12,12 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
+import styled from 'styled-components';
 
 import { categories } from "../utlis";
 import { bars as barsArray } from "../utlis";
+
+console.log(process.env) 
 
 //check available in bars as a list!
 const addProductMutation = gql`
@@ -155,10 +158,28 @@ const AddProduct = props => {
     setDescriptionInput(defaultInputs.description)
   };
 
-  return (
-    <>
-      <h4>Add new product</h4>
+  //Styled components
 
+  const Checkboxes = styled(FormGroup)`
+    flex-direction: row;
+    label:first-of-type {
+      flex-grow: 1;
+    }
+  `
+
+  return (
+    <div
+      style={{
+        width: '40vw',
+        minWidth : 'calc(300px - 2rem)',
+        margin: '0 auto',
+        padding: '0 2rem',
+        textAlign: 'center',
+        display: 'flex',
+        flexDirection: 'column'
+      }}
+    >
+      <h4>Add new product</h4>
       <TextField
         label="Product name"
         margin="normal"
@@ -192,7 +213,7 @@ const AddProduct = props => {
           )}
         </FormControl>
       }
-      <FormGroup row>
+      <Checkboxes>
         {Object.getOwnPropertyNames(availableInBarsInput).map((bar, index) => {
           return (
             <FormControlLabel
@@ -213,7 +234,7 @@ const AddProduct = props => {
             />
           );
         })}
-      </FormGroup>
+      </Checkboxes>
       <TextField
         label="Product description"
         margin="normal"
@@ -229,7 +250,7 @@ const AddProduct = props => {
       >
         Create product
       </Button>
-    </>
+    </div>
   );
 };
 
