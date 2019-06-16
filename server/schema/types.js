@@ -25,6 +25,7 @@ const ProductType = new GraphQLObjectType({
     fields: () => ({
       id: { type: GraphQLID },
       dateAdded: { type: GraphQLString },
+      comment: { type: GraphQLString },
       markedAsImportant: { type: GraphQLBoolean },
       product: {
         type: ProductType,

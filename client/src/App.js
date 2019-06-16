@@ -3,9 +3,9 @@ import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 import Products from "./components/Products";
 import AddProduct from "./components/AddProduct";
+import AddMissingProductRecord from "./components/AddMissingProductRecord";
 import Dialog from "@material-ui/core/Dialog";
-import styled from 'styled-components';
-import Slide from "@material-ui/core/Slide";
+import styled, { keyframes } from "styled-components";
 
 const uri =
   process.env.NODE_ENV === "production"
@@ -17,10 +17,21 @@ const client = new ApolloClient({ uri });
 function App() {
   const [open, setOpen] = React.useState(false);
 
-  const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
-  
+  const slideInKeyframes = keyframes`
+    0% {
+    transform: translateY(1000px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  `;
+
+  const SlideIn = styled.div`
+    animation: ${slideInKeyframes} 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+      both;
+  `;
 
   function handleClickOpen() {
     setOpen(true);
@@ -30,14 +41,23 @@ function App() {
     setOpen(false);
   }
 
+  // function showNewProductModal() {
+  //   return (
+
+  //   );
+  // }
+
   return (
     <ApolloProvider client={client}>
       <div className="App">
         <h1>Hello from the app!</h1>
         <Products />
+        <AddMissingProductRecord />
         <button onClick={handleClickOpen}>open</button>
-        <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
-            <AddProduct />
+        <Dialog fullScreen open={open} onClose={handleClose}>
+          <SlideIn>
+            <AddProduct onClose={handleClose} />
+          </SlideIn>
         </Dialog>
       </div>
     </ApolloProvider>

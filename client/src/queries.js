@@ -19,3 +19,14 @@ export const addProductMutation = gql`
     }
   }
 `;
+
+export const getProductsQuery = gql`
+{
+    products{
+      name
+      category
+      availableInBars
+      id
+    }
+  }
+`
