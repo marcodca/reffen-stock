@@ -26,7 +26,7 @@ const StyledGroupBadge = styled.span`
     min-width: 1;
     padding: 0.16666666666667em 0.5em;
     text-align : center;
-`
+`;
 
 const formatGroupLabel = data => (
   <StyledGroup>
