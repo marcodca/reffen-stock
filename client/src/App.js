@@ -54,7 +54,7 @@ function App() {
         <Products />
         <AddMissingProductRecord />
         <button onClick={handleClickOpen}>open</button>
-        <Dialog fullScreen open={open} onClose={handleClose}>
+        <Dialog fullScreen open={open} >
           <SlideIn>
             <AddProduct onClose={handleClose} />
           </SlideIn>

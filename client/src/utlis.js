@@ -1,5 +1,28 @@
+import { beerBottle, beerPremiumBottle, beerKeg, softDrink, juice, cocktail, syrop, fruit, wine, spirit, cleaning, barSupply, other  } from "./styles/icons";
 
-//keys are the slug/label and 
-export const categories = ['Beer bottles','Beer premium bottles/cans', 'Beer kegs', 'Soft drinks', 'Juices','Syrops/Puree','Fruits', 'Wines', 'Spirits', 'Cleaning', 'Otheras'];
+export const categories = [
+  { label: "Beer bottles", icon: beerBottle },
+  { label: "Beer premium bottles/cans", icon: beerPremiumBottle },
+  { label: "Beer kegs", icon: beerKeg },
+  { label: "Soft drinks", icon: softDrink },
+  { label: "Juices", icon: juice },
+  { label: "Cocktails", icon: cocktail },
+  { label: "Syrops/Puree", icon: syrop },
+  { label: "Fruits", icon: fruit },
+  { label: "Wines", icon: wine },
+  { label: "Spirits", icon: spirit },
+  { label: "Cleaning", icon: cleaning },
+  { label: "Bar supplies" , icon: barSupply },
+  { label: "Others" , icon: other },
+];
 
-export const bars = ['Little Village','Funky Cow', 'Foxy', 'Yellow Fellow', 'MS Brewsky', 'Speedy', 'Bling-bling','Bang-truck'];
+export const bars = [
+  "Little Village",
+  "Funky Cow",
+  "Foxy",
+  "Yellow Fellow",
+  "MS Brewsky",
+  "Speedy",
+  "Bling-bling",
+  "Bang-truck"
+];

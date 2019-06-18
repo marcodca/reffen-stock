@@ -1,0 +1,13 @@
+export { default as beerBottle } from './beer-bottle.svg';
+export { default as beerPremiumBottle } from './beer-premium-bottle.svg';
+export { default as beerKeg } from './beer-keg.svg';
+export { default as cocktail} from './cocktail.svg';
+export { default as fruit } from './fruit.svg';
+export { default as juice} from './juice.svg';
+export { default as softDrink} from './soft-drink.svg';
+export { default as spirit } from './spirit.svg';
+export { default as syrop } from './syrop.svg';
+export { default as wine } from './wine.svg';
+export { default as cleaning } from './cleaning.svg';
+export { default as barSupply } from './bar-supply.svg';
+export { default as other } from './other.svg';

@@ -60,7 +60,7 @@ const AddProduct = props => {
 
   const handleNameInput = e => {
     const { value } = e.target;
-    if (value.length >= 4) {
+    if (value.trim().length >= 4) {
       setNameInput({ value, isValid: true });
     } else {
       setNameInput({ value, isValid: false });
@@ -132,9 +132,9 @@ const AddProduct = props => {
 
   const handleCreateProduct = () => {
     //Extract the inputs value
-    const name = nameInput.value,
+    const name = nameInput.value.trim(),
       category = categoryInput.value,
-      description = descriptionInput,
+      description = descriptionInput.trim(),
       availableInBars = Object.entries(availableInBarsInput).reduce(
         (acc, [barLabel, barValue]) => {
           acc =
@@ -163,6 +163,8 @@ const AddProduct = props => {
     setCategoryInput(defaultInputs.categories);
     setAvailableInBarsInput(defaultInputs.availableInBars);
     setDescriptionInput(defaultInputs.description);
+    //Close the dialog
+    props.onClose();
   };
 
   //Styled components
@@ -217,9 +219,9 @@ const AddProduct = props => {
             <MenuItem value="" disabled>
               <em>None</em>
             </MenuItem>
-            {categories.map((category, index) => (
-              <MenuItem value={category} key={index}>
-                {category}
+            {categories.map(({label}, index) => (
+              <MenuItem value={label} key={label}>
+                {label}
               </MenuItem>
             ))}
           </Select>
