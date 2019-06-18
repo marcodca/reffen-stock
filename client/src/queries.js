@@ -21,12 +21,29 @@ export const addProductMutation = gql`
 `;
 
 export const getProductsQuery = gql`
-{
-    products{
+  {
+    products {
       name
       category
       availableInBars
       id
     }
   }
-`
+`;
+
+export const getMissingProductsRecordsQuery = gql`
+  {
+    missingProductRecords {
+      id
+      dateAdded
+      comment
+      markedAsImportant
+      product {
+        name
+        category
+        availableInBars
+        description
+      }
+    }
+  }
+`;
