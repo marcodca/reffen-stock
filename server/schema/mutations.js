@@ -32,16 +32,18 @@ const Mutation = new GraphQLObjectType({
       addMissingProductRecord: {
         type: MissingProductRecordType,
         args: {
+          productId: { type: GraphQLNonNull(GraphQLID) },
           markedAsImportant: { type: GraphQLNonNull(GraphQLBoolean) },
-          productId: { type: GraphQLNonNull(GraphQLID) }
+          comment : { type : GraphQLString }
         },
-        resolve(parent, { markedAsImportant, productId }) {
+        resolve(parent, { markedAsImportant, productId, comment }) {
           const dateAdded = new Date().toDateString();
   
           let missingProductRecord = new MissingProductRecord({
-            markedAsImportant,
             productId,
-            dateAdded
+            dateAdded,
+            markedAsImportant,
+            comment
           });
       
           return missingProductRecord.save();

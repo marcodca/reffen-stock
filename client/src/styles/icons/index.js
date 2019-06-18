@@ -11,3 +11,4 @@ export { default as wine } from './wine.svg';
 export { default as cleaning } from './cleaning.svg';
 export { default as barSupply } from './bar-supply.svg';
 export { default as other } from './other.svg';
+export { default as exclamationMark } from './exclamation-mark.svg';
