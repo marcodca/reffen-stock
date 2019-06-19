@@ -2,30 +2,34 @@ import React from "react";
 import { graphql, compose } from "react-apollo";
 import { getProductsQuery, getMissingProductsRecordsQuery } from "../queries";
 
-const Products = ({products : {products}, missingProductRecords :{missingProductRecords}}) => {
-    console.log(products)
-    console.log(missingProductRecords)
+const Products = ({
+  products: { products },
+  missingProductRecords: { missingProductRecords }
+}) => {
   return (
     <>
       <h3>
         Here we are trying to output some data from the products!
         <ul>
           {products &&
-            products.map(product => (
-              <li key={product.id}>{product.name}</li>
-            ))}
+            products.map(product => <li key={product.id}>{product.name}</li>)}
         </ul>
       </h3>
-      <h3>
-        And here from the missing products records!
-        <ul>
-          {missingProductRecords &&
-            missingProductRecords.map(missingProductRecord => (
-              <li key={missingProductRecord.id}>{missingProductRecord.product.name}</li>
-            ))
-            }
-        </ul>
-      </h3>
+      <h3>And here from the missing products records!</h3>
+      <ul>
+        {missingProductRecords &&
+          missingProductRecords.map(missingProductRecord => (
+            <div key={missingProductRecords.id}>
+              <li>name: {missingProductRecord.product.name}</li>
+              <li>Date addedL: {missingProductRecord.dateAdded}</li>
+              {missingProductRecord.comment && (
+                <li>{missingProductRecord.comment}</li>
+              )}
+              {missingProductRecord.markedAsImportant && <li>Is important</li>}
+              <li>---</li>
+            </div>
+          ))}
+      </ul>
     </>
   );
 };

@@ -39,6 +39,33 @@ export const getMissingProductsRecordsQuery = gql`
       comment
       markedAsImportant
       product {
+        id
+        name
+        category
+        availableInBars
+        description
+      }
+    }
+  }
+`;
+
+export const addMissingProductRecordMutation = gql`
+  mutation(
+    $productId: ID!
+    $markedAsImportant: Boolean!
+    $comment: String
+  ) {
+    addMissingProductRecord(
+      productId: $productId
+      markedAsImportant: $markedAsImportant
+      comment: $comment
+    ) {
+      id
+      dateAdded
+      comment
+      markedAsImportant
+      product {
+        id
         name
         category
         availableInBars

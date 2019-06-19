@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import Select from "react-select";
-import { getProductsQuery } from "../queries";
-import { gql } from "apollo-boost";
-import { graphql } from "react-apollo";
+import {
+  getProductsQuery,
+  addMissingProductRecordMutation,
+  getMissingProductsRecordsQuery
+} from "../queries";
+import { graphql, compose } from "react-apollo";
 import styled from "styled-components";
 import { categories } from "../utlis";
 import { exclamationMark } from "../styles/icons";
@@ -11,8 +14,6 @@ import TextField from "@material-ui/core/TextField";
 import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Button from "@material-ui/core/Button";
-
-//Mutation for adding missing product record
 
 //Styled-Components
 const StyledGroup = styled.div`
@@ -65,7 +66,10 @@ const formatGroupLabel = ({ label, icon, options }) => (
 
 //
 
-const AddMissingProductRecord = ({ data: { products } }) => {
+const AddMissingProductRecord = ({
+  products: { products },
+  addNewMissingProductRecord
+}) => {
   //All the the products in a value-label format.
   const productOptions = products
     ? products.map(elem => ({
@@ -96,8 +100,8 @@ const AddMissingProductRecord = ({ data: { products } }) => {
 
   const handleSelectInput = e => {
     const { value } = e;
+    console.log(value)
     setSelectInput(value);
-    console.log(value);
   };
 
   //Comment input
@@ -128,6 +132,29 @@ const AddMissingProductRecord = ({ data: { products } }) => {
     </span>
   );
 
+  //Handle report new missing product
+
+  const handleReportNewMissingProductRecord = () => {
+    //Extract the values
+    const productId = selectInput,
+    markedAsImportant = isImportant,
+    comment = commentInput.trim();
+
+    addNewMissingProductRecord({
+      variables: {
+        productId,
+        markedAsImportant,
+        comment
+      },
+      //refetch the get Missing Product Records query
+      refetchQueries: [{ query: getMissingProductsRecordsQuery }]
+    });
+    //Clear the input values
+    setSelectInput(null);
+    setCommentInput("");
+    setIsImportant(false);
+  };
+
   return (
     //Form with the necesary field to add a new missing product record
     //An autocomplete text input, populated with all the products names that we are fetching from the query. Required.
@@ -139,6 +166,7 @@ const AddMissingProductRecord = ({ data: { products } }) => {
         options={groupedProductOptions}
         formatGroupLabel={formatGroupLabel}
         onChange={handleSelectInput}
+        value={selectInput ? undefined : "" }
       />
 
       <TextField
@@ -164,13 +192,18 @@ const AddMissingProductRecord = ({ data: { products } }) => {
         labelPlacement="start"
       />
       <Button
-        disabled={selectInput ? false : true }
+        disabled={selectInput ? false : true}
+        onClick={handleReportNewMissingProductRecord}
       >
-        Report missing product
+        Report new missing product
       </Button>
       <Button>Cancel</Button>
     </form>
   );
 };
-
-export default graphql(getProductsQuery)(AddMissingProductRecord);
+export default compose(
+  graphql(getProductsQuery, { name: "products" }),
+  graphql(addMissingProductRecordMutation, {
+    name: "addNewMissingProductRecord"
+  })
+)(AddMissingProductRecord);
