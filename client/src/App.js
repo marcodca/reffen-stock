@@ -1,6 +1,7 @@
 import React from "react";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
+import { StylesProvider } from '@material-ui/styles';
 import MainView from './components/MainView';
 
 //Set the correspondig uri for production and development
@@ -15,7 +16,9 @@ const App = () => {
 
   return (
     <ApolloProvider client={client}>
-      <MainView />
+      <StylesProvider injectFirst>
+        <MainView />    
+      </StylesProvider>
     </ApolloProvider>
   );
 }

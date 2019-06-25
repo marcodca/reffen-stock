@@ -3,56 +3,22 @@ import Products from "./Products";
 import AddProduct from "./AddProduct";
 import AddMissingProductRecord from "./AddMissingProductRecord";
 import Dialog from "@material-ui/core/Dialog";
-import styled, { keyframes } from "styled-components";
+import styled, { css } from "styled-components";
+import media from "../styles/media";
+import { SlideIn, SlideInBlurred } from "../styles/animations";
 
-import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
+import appBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 
-function TabContainer(props) {
-  return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
-      {props.children}
-    </Typography>
-  );
-}
-
-const LinkTab = props => (
-    <Tab
-      component="a"
-      onClick={event => {
-        event.preventDefault();
-      }}
-      {...props}
-    />
-  );
-
-const Container = styled.div`
-    flex-grow : 1;
-    background-color: lightblue;
-`
-//
-
-const slideInKeyframes = keyframes`
-0% {
-transform: translateY(1000px);
-opacity: 0;
-}
-100% {
-transform: translateY(0);
-opacity: 1;
-}
-`;
-
-const SlideIn = styled.div`
-  animation: ${slideInKeyframes} 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-`;
+import CssBaseline from "@material-ui/core/CssBaseline";
+import drawer from "@material-ui/core/Drawer";
+import Hidden from "@material-ui/core/Hidden";
+import Button from "@material-ui/core/Button";
 
 const MainView = props => {
-
-  //Create product dialog  
+  //Create product dialog
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -68,25 +34,122 @@ const MainView = props => {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+
+  const TabContainer = props => {
+    return (
+      <Typography component="div" style={{ padding: 8 * 3 }}>
+        {props.children}
+      </Typography>
+    );
+  };
+
+  const LinkTab = props => (
+    <Tab
+      component="a"
+      onClick={event => {
+        event.preventDefault();
+      }}
+      {...props}
+    />
+  );
+
+  const Container = styled.div`
+    flex-grow: 1;
+    display: flex;
+  `;
+
+  //Drawer
+
+  const { container } = props;
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  function handleDrawerToggle() {
+    setMobileOpen(!mobileOpen);
   }
+
+  const drawerWidth = 240;
+
+  const AppBar = styled(appBar)`
+    margin-left: ${drawerWidth};
+    ${media.down.sm`width :calc(100% - ${drawerWidth}px)`};
+    ${props =>
+      props.isfirsttabopen !== "false"
+        ? ""
+        : css`
+            width: 100% !important;
+          `}
+  `;
+
+  const DrawerNav = styled.nav`
+    ${media.down.sm`width : ${drawerWidth}px;`}
+    flex-shrink: 0;
+  `;
+
+  const Drawer = styled(drawer)`
+    .MuiDrawer-paper {
+      width: ${drawerWidth}px;
+    }
+  `;
+
   return (
     <Container>
-      <AppBar position="static">
+      <CssBaseline />
+      {
+        //aghhh, funny error with that prop "is first tab open", got to come with lowercases and coertion to make it go away
+      }
+      <AppBar position="fixed" isfirsttabopen={String(value === 0)}>
         <Tabs variant="fullWidth" value={value} onChange={handleChange}>
-          <LinkTab label="Out of stock"  />
+          <LinkTab label="Out of stock" />
           <LinkTab label="Cocktail counter" />
         </Tabs>
       </AppBar>
+      <DrawerNav aria-label="Report new missing product">
+        <Hidden smUp implementation="css">
+          <Drawer
+            container={container}
+            variant="temporary"
+            anchor={"left"}
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            ModalProps={{
+              keepMounted: true // Better open performance on mobile.
+            }}
+          >
+            <SlideInBlurred>
+              <AddMissingProductRecord />
+            </SlideInBlurred>
+          </Drawer>
+        </Hidden>
+        <Hidden xsDown implementation="css">
+          <Drawer
+            variant="persistent" //middle way between permanent and temporary
+            open={value === 0}
+            anchor={"left"}
+          >
+            <AddMissingProductRecord />
+          </Drawer>
+        </Hidden>
+      </DrawerNav>
       {value === 0 && (
         <TabContainer>
-            <Products />
-            <AddMissingProductRecord />
-            <button onClick={handleClickOpen}>open</button>
-            <Dialog fullScreen open={open}>
-              <SlideIn>
-                <AddProduct onClose={handleClose} />
-              </SlideIn>
-            </Dialog>
+          <Products />
+          <button onClick={handleClickOpen}>open</button>
+          <Dialog fullScreen open={open}>
+            <SlideIn>
+              <AddProduct onClose={handleClose} />
+            </SlideIn>
+          </Dialog>
+          <Hidden smUp implementation="css">
+            <Button
+              color="primary"
+              aria-label="Open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+            >
+              Open drawer
+            </Button>
+          </Hidden>
         </TabContainer>
       )}
       {value === 1 && <TabContainer>Page Two</TabContainer>}

@@ -19,7 +19,7 @@ const Products = ({
       <ul>
         {missingProductRecords &&
           missingProductRecords.map(missingProductRecord => (
-            <div key={missingProductRecords.id}>
+            <div key={missingProductRecord.id}>
               <li>name: {missingProductRecord.product.name}</li>
               <li>Date addedL: {missingProductRecord.dateAdded}</li>
               {missingProductRecord.comment && (
