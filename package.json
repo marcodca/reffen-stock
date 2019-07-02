@@ -19,5 +19,8 @@
     "graphql": "^14.3.0",
     "mongoose": "^5.5.11",
     "react-select": "^3.0.4"
+  },
+  "engines": {
+    "node": "10.15.3"
   }
 }
