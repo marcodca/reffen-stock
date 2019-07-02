@@ -68,8 +68,10 @@ const formatGroupLabel = ({ label, icon, options }) => (
 
 const AddMissingProductRecord = ({
   products: { products },
-  addNewMissingProductRecord
+  addNewMissingProductRecord, onClose
 }) => {
+
+  console.log(products)
   //All the the products in a value-label format.
   const productOptions = products
     ? products.map(elem => ({
@@ -153,13 +155,11 @@ const AddMissingProductRecord = ({
     setSelectInput(null);
     setCommentInput("");
     setIsImportant(false);
+    //close the drawer on mobile
+    onClose();
   };
 
   return (
-    //Form with the necesary field to add a new missing product record
-    //An autocomplete text input, populated with all the products names that we are fetching from the query. Required.
-    //A text input for the optional comment.
-    //A Radio button to mark the item as important
     <form>
       <Select
         placeholder="Search for a product"

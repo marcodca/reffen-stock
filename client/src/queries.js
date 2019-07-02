@@ -27,6 +27,7 @@ export const getProductsQuery = gql`
       category
       availableInBars
       id
+      description
     }
   }
 `;

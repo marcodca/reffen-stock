@@ -59,8 +59,10 @@ const AddProduct = props => {
   const [nameInput, setNameInput] = useState(defaultInputs.name);
 
   const handleNameInput = e => {
-    const { value } = e.target;
-    if (value.trim().length >= 4) {
+    let { value } = e.target;
+
+    if (value.length >= 4) {
+      value = value.length < 25 ? value : value.slice(0,25);
       setNameInput({ value, isValid: true });
     } else {
       setNameInput({ value, isValid: false });
@@ -126,7 +128,8 @@ const AddProduct = props => {
   );
 
   const handleDescriptionInput = e => {
-    const { value } = e.target;
+    let { value } = e.target;
+    value = value.length < 50 ? value : value.slice(0,50);
     setDescriptionInput(value);
   };
 
@@ -198,7 +201,8 @@ const AddProduct = props => {
     >
       <Typography variant="h6">Create new product</Typography>
       <TextField
-        label="Product name*"
+        label="Product name"
+        required
         margin="normal"
         variant="outlined"
         onChange={handleNameInput}
@@ -209,8 +213,9 @@ const AddProduct = props => {
       {
         //Min width should be applied to the select element(120)}
         <FormControl>
-          <InputLabel htmlFor="category">Category*</InputLabel>
+          <InputLabel htmlFor="category">Category *</InputLabel>
           <Select
+            required
             variant="outlined"
             value={categoryInput.value}
             onChange={handleCategoryInput}
@@ -233,7 +238,7 @@ const AddProduct = props => {
       <StylesProvider injectFirst>
         <Checkboxes>
           <FormLabel component="legend">
-            Bars in where the product is available*
+            Bars in where the product is available *
           </FormLabel>
           {Object.getOwnPropertyNames(availableInBarsInput).map(
             (bar, index) => {
@@ -266,7 +271,7 @@ const AddProduct = props => {
         </Checkboxes>
       </StylesProvider>
       <TextField
-        label="Product description"
+        label="Optional product description"
         margin="normal"
         variant="outlined"
         onChange={handleDescriptionInput}
