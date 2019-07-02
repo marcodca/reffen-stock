@@ -37,7 +37,7 @@ const AddProduct = props => {
   const [nameInput, setNameInput] = useState(defaultInputs.name);
 
   const handleNameInput = e => {
-    e.target.focus({preventScroll: true});
+    // e.target.focus({preventScroll: true});
     let { value } = e.target;
 
     if (value.length >= 4) {
