@@ -30,10 +30,10 @@ const MainView = (props, context) => {
   };
 
   //Tabs
-  const [value, setValue] = useState(0);
+  const [tabsValue, setTabsValue] = useState(0);
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    setTabsValue(newValue);
   };
 
   const TabContainer = props => {
@@ -76,7 +76,7 @@ const MainView = (props, context) => {
     background-color: ${props => props.theme.primary };
     ${media.down.sm`width :calc(100% - ${drawerWidth}px)`};
     ${props =>
-      props.isfirsttabopen !== "false"
+      tabsValue === 0
         ? ""
         : css`
             width: 100% !important;
@@ -97,11 +97,8 @@ const MainView = (props, context) => {
   return (
             <Container>
             <CssBaseline />
-            {
-              //aghhh, funny error with that prop "is first tab open", got to come with lowercases and coertion to make it go away
-            }
-            <AppBar position="fixed" isfirsttabopen={String(value === 0)}>
-              <Tabs variant="fullWidth" value={value} onChange={handleChange}>
+            <AppBar position="fixed">
+              <Tabs variant="fullWidth" value={tabsValue} onChange={handleChange}>
                 <LinkTab label="Out of stock" />
                 <LinkTab label="Cocktail counter" />
               </Tabs>
@@ -126,14 +123,14 @@ const MainView = (props, context) => {
               <Hidden xsDown implementation="css">
                 <Drawer
                   variant="persistent" //middle way between permanent and temporary
-                  open={value === 0}
+                  open={tabsValue === 0}
                   anchor={"left"}
                 >
                   <AddMissingProductRecord />
                 </Drawer>
               </Hidden>
             </DrawerNav>
-            {value === 0 && (
+            {tabsValue === 0 && (
               <TabContainer>
                 <Products />
                 <button onClick={handleClickOpen}>open</button>
@@ -154,7 +151,7 @@ const MainView = (props, context) => {
                 </Hidden>
               </TabContainer>
             )}
-            {value === 1 && <TabContainer>Page Two</TabContainer>}
+            {tabsValue === 1 && <TabContainer>Page Two</TabContainer>}
           </Container>
   );
 };

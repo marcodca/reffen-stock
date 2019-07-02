@@ -158,9 +158,6 @@ const AddProduct = props => {
     border: 1px solid rgba(0, 0, 0, 0.23);
     border-radius: 3%;
     background-color: white;
-    &:focus-within {
-      border: 2px solid #3f51b5;
-    }
     legend{
       color: black;
       margin-bottom: 1em;
