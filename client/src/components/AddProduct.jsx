@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { graphql } from "react-apollo";
 import { getProductsQuery, addProductMutation } from "../queries";
-import styled from "styled-components/macro";
+import styled, { css } from "styled-components/macro";
 
 import TextField from "@material-ui/core/TextField";
 import Select from "@material-ui/core/Select";
@@ -157,8 +157,13 @@ const AddProduct = props => {
     padding: 3%;
     border: 1px solid rgba(0, 0, 0, 0.23);
     border-radius: 3%;
+    background-color: white;
     &:focus-within {
       border: 2px solid #3f51b5;
+    }
+    legend{
+      color: black;
+      margin-bottom: 1em;
     }
     legend,
     label:first-of-type {
@@ -166,6 +171,15 @@ const AddProduct = props => {
       justify-self: center;
     }
   `;
+
+  const TextInputStyle = css`
+  input {
+    background-color: white;
+  }
+  label {
+    color: black !important;
+  }
+`
 
   return (
     <div
@@ -183,26 +197,19 @@ const AddProduct = props => {
       }}
     >
       <Typography variant="h5">Create new product</Typography>
+      {//Erw, an issue on mobile (android), the viw is scroll to bottom when the input get focus and the keyboard pops up, I'll have to chek on that later
+      }
       <TextField
-        label="Product name"
-        required
+        label="Product name *"
         margin="normal"
         variant="outlined"
         onChange={handleNameInput}
         value={nameInput.value}
         helperText={nameInput.isValid ? null : "At least 4 characters"}
         error={nameInput.isValid ? false : true}
-        css={`
-          input {
-            background-color: white;
-          }
-          label {
-            color: black !important;
-          }
-        `}
+        css={TextInputStyle}
       />
       {
-        //Min width should be applied to the select element(120)}
         <FormControl
           css={`
             background-color: white;
@@ -211,6 +218,9 @@ const AddProduct = props => {
             padding: 3%;
             div:focus {
               background-color: white;
+            }
+            .MuiFormHelperText-root{
+              color: red;
             }
           `}
         >
@@ -291,11 +301,19 @@ const AddProduct = props => {
         variant="outlined"
         onChange={handleDescriptionInput}
         value={descriptionInput}
+        css={TextInputStyle}
       />
       <Typography variant="caption" align="left" gutterBottom>
         * Required field
       </Typography>
-      <div>
+      <div css={`
+        width: 80%;
+        min-width: 270px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-evenly;
+        `
+        }>
         <Button
           variant="contained"
           disabled={nameInput.isValid && categoryInput.isValid ? false : true}
