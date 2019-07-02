@@ -16,6 +16,7 @@ export const addProductMutation = gql`
       id
       name
       category
+      description
     }
   }
 `;

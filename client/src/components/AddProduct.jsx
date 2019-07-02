@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { gql } from "apollo-boost";
 import { graphql } from "react-apollo";
-import { getProductsQuery } from "../queries";
-import styled from "styled-components";
-import { StylesProvider } from "@material-ui/styles";
+import { getProductsQuery, addProductMutation } from "../queries";
+import styled from "styled-components/macro";
 
 import TextField from "@material-ui/core/TextField";
 import Select from "@material-ui/core/Select";
@@ -19,26 +17,6 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 
 import { categories, bars as barsArray } from "../utlis";
-
-const addProductMutation = gql`
-  mutation(
-    $name: String!
-    $category: String!
-    $availableInBars: [String]!
-    $description: String
-  ) {
-    addProduct(
-      name: $name
-      category: $category
-      availableInBars: $availableInBars
-      description: $description
-    ) {
-      id
-      name
-      category
-    }
-  }
-`;
 
 const AddProduct = props => {
   //DefaultValues for the inputs
@@ -62,7 +40,7 @@ const AddProduct = props => {
     let { value } = e.target;
 
     if (value.length >= 4) {
-      value = value.length < 25 ? value : value.slice(0,25);
+      value = value.length < 25 ? value : value.slice(0, 25);
       setNameInput({ value, isValid: true });
     } else {
       setNameInput({ value, isValid: false });
@@ -129,7 +107,7 @@ const AddProduct = props => {
 
   const handleDescriptionInput = e => {
     let { value } = e.target;
-    value = value.length < 50 ? value : value.slice(0,50);
+    value = value.length < 50 ? value : value.slice(0, 50);
     setDescriptionInput(value);
   };
 
@@ -148,7 +126,6 @@ const AddProduct = props => {
         },
         []
       );
-
     //Make the mutation,
     props.mutate({
       variables: {
@@ -177,9 +154,11 @@ const AddProduct = props => {
     grid-template-columns: auto auto;
     margin-top: 1rem;
     padding: 3%;
-    border: 1px solid gray;
-    border-radius: 5%;
-
+    border: 1px solid rgba(0, 0, 0, 0.23);
+    border-radius: 3%;
+    &:focus-within {
+      border: 2px solid #3f51b5;
+    }
     legend,
     label:first-of-type {
       grid-column-start: span 2;
@@ -190,16 +169,19 @@ const AddProduct = props => {
   return (
     <div
       style={{
-        width: "40vw",
-        minWidth: "calc(300px - 2rem)",
+        width: "43vw",
+        minWidth: "calc(333px - 2rem)",
+        padding: "2%",
+        borderRadius: "3%",
         margin: "0 auto",
         paddingBottom: "2rem",
         textAlign: "center",
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
+        backgroundColor: "rgba(178, 177, 207, 0.1)"
       }}
     >
-      <Typography variant="h6">Create new product</Typography>
+      <Typography variant="h5">Create new product</Typography>
       <TextField
         label="Product name"
         required
@@ -209,6 +191,14 @@ const AddProduct = props => {
         value={nameInput.value}
         helperText={nameInput.isValid ? null : "At least 4 characters"}
         error={nameInput.isValid ? false : true}
+        css={`
+          input {
+            background-color: white;
+          }
+          label {
+            color: black !important;
+          }
+        `}
       />
       {
         //Min width should be applied to the select element(120)}
@@ -224,7 +214,7 @@ const AddProduct = props => {
             <MenuItem value="" disabled>
               <em>None</em>
             </MenuItem>
-            {categories.map(({label}, index) => (
+            {categories.map(({ label }, index) => (
               <MenuItem value={label} key={label}>
                 {label}
               </MenuItem>
@@ -235,41 +225,36 @@ const AddProduct = props => {
           )}
         </FormControl>
       }
-      <StylesProvider injectFirst>
-        <Checkboxes>
-          <FormLabel component="legend">
-            Bars in where the product is available *
-          </FormLabel>
-          {Object.getOwnPropertyNames(availableInBarsInput).map(
-            (bar, index) => {
-              return (
-                <FormControlLabel
-                  key={index}
-                  control={
-                    <Checkbox
-                      disabled={
-                        bar === "All bars" &&
-                        checkBarStatus(availableInBarsInput)
-                          ? true
-                          : false
-                      }
-                      name={bar}
-                      checked={
-                        bar === "All bars" &&
-                        checkBarStatus(availableInBarsInput)
-                          ? true
-                          : availableInBarsInput[bar]
-                      }
-                      onChange={handleAvailableInBarsInput}
-                    />
+      <Checkboxes>
+        <FormLabel component="legend">
+          Bars in where the product is available *
+        </FormLabel>
+        {Object.getOwnPropertyNames(availableInBarsInput).map((bar, index) => {
+          return (
+            <FormControlLabel
+              key={index}
+              control={
+                <Checkbox
+                  color="primary"
+                  disabled={
+                    bar === "All bars" && checkBarStatus(availableInBarsInput)
+                      ? true
+                      : false
                   }
-                  label={bar}
+                  name={bar}
+                  checked={
+                    bar === "All bars" && checkBarStatus(availableInBarsInput)
+                      ? true
+                      : availableInBarsInput[bar]
+                  }
+                  onChange={handleAvailableInBarsInput}
                 />
-              );
-            }
-          )}
-        </Checkboxes>
-      </StylesProvider>
+              }
+              label={bar}
+            />
+          );
+        })}
+      </Checkboxes>
       <TextField
         label="Optional product description"
         margin="normal"
