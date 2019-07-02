@@ -37,6 +37,7 @@ const AddProduct = props => {
   const [nameInput, setNameInput] = useState(defaultInputs.name);
 
   const handleNameInput = e => {
+    e.target.focus({preventScroll: true});
     let { value } = e.target;
 
     if (value.length >= 4) {
@@ -202,8 +203,31 @@ const AddProduct = props => {
       />
       {
         //Min width should be applied to the select element(120)}
-        <FormControl>
-          <InputLabel htmlFor="category">Category *</InputLabel>
+        <FormControl
+          css={`
+            background-color: white;
+            border: 1px solid rgba(0, 0, 0, 0.23);
+            border-radius: 3%;
+            padding: 3%;
+            div:focus {
+              background-color: white;
+            }
+          `}
+        >
+          <InputLabel 
+          htmlFor="category"
+          css={`
+            color: black;
+            margin-left: 3%;
+            margin-top: 2%;
+            &:focus {
+              color: black !important;
+              margin-top: 2%;  
+            }
+          `}
+          >
+            Category *
+          </InputLabel>
           <Select
             required
             variant="outlined"
@@ -214,8 +238,14 @@ const AddProduct = props => {
             <MenuItem value="" disabled>
               <em>None</em>
             </MenuItem>
-            {categories.map(({ label }, index) => (
-              <MenuItem value={label} key={label}>
+            {categories.map(({ label }) => (
+              <MenuItem
+                value={label}
+                key={label}
+                css={`
+                  background-color: white;
+                `}
+              >
                 {label}
               </MenuItem>
             ))}
