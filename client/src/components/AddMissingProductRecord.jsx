@@ -9,6 +9,7 @@ import { graphql, compose } from "react-apollo";
 import styled from "styled-components/macro";
 import { categories } from "../utlis";
 import { exclamationMark } from "../styles/icons";
+import closeIcon from "@material-ui/icons/Close";
 
 import TextField from "@material-ui/core/TextField";
 import Switch from "@material-ui/core/Switch";
@@ -60,6 +61,13 @@ const ExclamationMarkIcon = styled.img`
   filter: ${props => (props.isChecked ? "contrast(100%)" : "contrast(0%)")};
 `;
 
+const CloseIcon = styled(closeIcon)`
+  position: absolute;
+  left: 85%;
+  bottom: 93%;
+  cursor: pointer;
+`
+
 //
 
 //A componenent for the the categories info display in the select input
@@ -74,7 +82,6 @@ const formatGroupLabel = ({ label, icon, options }) => (
 );
 
 //
-
 const AddMissingProductRecord = ({
   products: { products },
   missingProducts: { missingProductRecords },
@@ -98,11 +105,15 @@ const AddMissingProductRecord = ({
         value: elem.id,
         label: elem.name,
         category: elem.category,
-        
+
         //If the product is already reported as missing, it's gonna be disabled in the input
-        isDisabled : (() => {
-          const missingProductsIds = missingProductRecords ? missingProductRecords.map( ({product}) => { return product.id}) : [];
-          return missingProductsIds.includes(elem.id)
+        isDisabled: (() => {
+          const missingProductsIds = missingProductRecords
+            ? missingProductRecords.map(({ product }) => {
+                return product.id;
+              })
+            : [];
+          return missingProductsIds.includes(elem.id);
         })()
       }))
     : [];
@@ -267,9 +278,14 @@ const AddMissingProductRecord = ({
       />
       <FormControlLabel
         css={`
-          align-content: center;
           margin-top: 1em;
+          width: 100%;
+          border : 1px solid lightgrey;
+          border-radius: 5%;
+          padding: 3%;
+          margin-left: 0;
         `}
+        
         control={
           <Switch
             checked={isImportant}
@@ -278,16 +294,29 @@ const AddMissingProductRecord = ({
           />
         }
         label={IsImportantLabel}
-        labelPlacement="start"
+        
       />
-      <Button
-        disabled={selectInput ? false : true}
-        onClick={handleReportNewMissingProductRecord}
-      >
-        Report new missing product
-      </Button>
-      <Button onClick={handleCancel}>Cancel</Button>
-      <Button onClick={openAddProductDialog}>Create new product</Button>
+        <CloseIcon
+        onClick={handleCancel}
+        >
+          <path
+            xmlns="http://www.w3.org/2000/svg"
+            d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+          />
+        </CloseIcon>
+        <Button
+          css={`
+            margin-top: 2em;
+            background-color: lightblue;
+          `}
+          disabled={selectInput ? false : true}
+          onClick={handleReportNewMissingProductRecord}
+          size='large'
+          fullWidth
+        >
+          Report new missing product
+        </Button>
+      <Button onClick={openAddProductDialog} css={`margin-top: 4em;`} variant="text">Create new product</Button>
     </Container>
   );
 };

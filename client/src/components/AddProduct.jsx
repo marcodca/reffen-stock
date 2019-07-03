@@ -37,7 +37,7 @@ const AddProduct = props => {
   const [nameInput, setNameInput] = useState(defaultInputs.name);
 
   const handleNameInput = e => {
-    e.target.focus({preventScroll: true});
+    e.target.focus({ preventScroll: true });
     let { value } = e.target;
 
     if (value.length >= 4) {
@@ -128,16 +128,23 @@ const AddProduct = props => {
         []
       );
     //Make the mutation,
-    props.mutate({
-      variables: {
-        name,
-        category,
-        availableInBars,
-        description
-      },
-      //refetch the getproduct query
-      refetchQueries: [{ query: getProductsQuery }]
-    });
+    props
+      .mutate({
+        variables: {
+          name,
+          category,
+          availableInBars,
+          description
+        },
+        //refetch the getproduct query
+        refetchQueries: [{ query: getProductsQuery }]
+      })
+      .then(({ data: { addProduct } }) => {
+        props.setOpenSnackbar({
+          value: true,
+          message: `${addProduct.name} was sucsessfully created`
+        });
+      });
 
     //Set the input's values back to default
     setNameInput(defaultInputs.name);
@@ -158,7 +165,7 @@ const AddProduct = props => {
     border: 1px solid rgba(0, 0, 0, 0.23);
     border-radius: 3%;
     background-color: white;
-    legend{
+    legend {
       color: black;
       margin-bottom: 1em;
     }
@@ -170,30 +177,32 @@ const AddProduct = props => {
   `;
 
   const TextInputStyle = css`
-  input {
-    background-color: white;
-  }
-  label {
-    color: black !important;
-  }
-`
+    input {
+      background-color: white;
+    }
+    label {
+      color: black !important;
+    }
+  `;
 
   return (
-    <div css={`        
-      width: 43vw;
-      min-width: calc(333px - 2rem);
-      padding: 2%;
-      border-radius: 3%;
-      margin: 0 auto;
-      padding-bottom: 2rem;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      background-color: rgba(178, 177, 207, 0.1);
-    `}
+    <div
+      css={`
+        width: 43vw;
+        min-width: calc(333px - 2rem);
+        padding: 2%;
+        border-radius: 3%;
+        margin: 0 auto;
+        padding-bottom: 2rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        background-color: rgba(178, 177, 207, 0.1);
+      `}
     >
       <Typography variant="h5">Create new product</Typography>
-      {//Erw, an issue on mobile (android), the viw is scroll to bottom when the input get focus and the keyboard pops up, I'll have to chek on that later
+      {
+        //Erw, an issue on mobile (android), the viw is scroll to bottom when the input get focus and the keyboard pops up, I'll have to chek on that later
       }
       <TextField
         label="Product name *"
@@ -215,22 +224,22 @@ const AddProduct = props => {
             div:focus {
               background-color: white;
             }
-            .MuiFormHelperText-root{
+            .MuiFormHelperText-root {
               color: red;
             }
           `}
         >
-          <InputLabel 
-          htmlFor="category"
-          css={`
-            color: black;
-            margin-left: 3%;
-            margin-top: 2%;
-            &:focus {
-              color: black !important;
-              margin-top: 2%;  
-            }
-          `}
+          <InputLabel
+            htmlFor="category"
+            css={`
+              color: black;
+              margin-left: 3%;
+              margin-top: 2%;
+              &:focus {
+                color: black !important;
+                margin-top: 2%;
+              }
+            `}
           >
             Category *
           </InputLabel>
@@ -302,14 +311,15 @@ const AddProduct = props => {
       <Typography variant="caption" align="left" gutterBottom>
         * Required field
       </Typography>
-      <div css={`
-        width: 80%;
-        min-width: 270px;
-        margin: 0 auto;
-        display: flex;
-        justify-content: space-evenly;
-        `
-        }>
+      <div
+        css={`
+          width: 80%;
+          min-width: 270px;
+          margin: 0 auto;
+          display: flex;
+          justify-content: space-evenly;
+        `}
+      >
         <Button
           variant="contained"
           disabled={nameInput.isValid && categoryInput.isValid ? false : true}

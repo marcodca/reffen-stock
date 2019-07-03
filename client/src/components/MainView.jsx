@@ -2,10 +2,15 @@ import React, { useState } from "react";
 import Products from "./Products";
 import AddProduct from "./AddProduct";
 import AddMissingProductRecord from "./AddMissingProductRecord";
-import Dialog from "@material-ui/core/Dialog";
-import styled, { css } from "styled-components";
+
+import styled, { css } from "styled-components/macro";
 import media from "../styles/media";
 import { SlideIn, SlideInBlurred } from "../styles/animations";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import CloseIcon from "@material-ui/icons/Close";
+import IconButton from "@material-ui/core/IconButton";
+
+import Dialog from "@material-ui/core/Dialog";
 
 import appBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
@@ -16,6 +21,9 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
 import Button from "@material-ui/core/Button";
+
+import Snackbar from "@material-ui/core/Snackbar";
+import SnackbarContent from "@material-ui/core/SnackbarContent";
 
 const MainView = (props, context) => {
   //Create product dialog
@@ -93,6 +101,29 @@ const MainView = (props, context) => {
     }
   `;
 
+  //Snackbar
+
+  const [openSnackbar, setOpenSnackbar] = React.useState({
+    value : false,
+    message: null
+  });
+
+
+
+  function handleClickSnackbarButton(message) {
+    setOpenSnackbar({value : true, message});
+  }
+
+  function handleCloseSnackbar(event, reason) {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar({
+      value : false,
+      message: null
+    });
+  }
+
   return (
     <Container>
       <CssBaseline />
@@ -144,7 +175,10 @@ const MainView = (props, context) => {
           <button onClick={handleClickOpen}>open</button>
           <Dialog fullScreen open={open}>
             <SlideIn>
-              <AddProduct onClose={handleClose} />
+              <AddProduct 
+                onClose={handleClose} 
+                setOpenSnackbar={setOpenSnackbar} 
+              />
             </SlideIn>
           </Dialog>
           <Hidden smUp implementation="css">
@@ -160,6 +194,52 @@ const MainView = (props, context) => {
         </TabContainer>
       )}
       {tabsValue === 1 && <TabContainer>Page Two</TabContainer>}
+      <Button onClick={handleClickSnackbarButton}>Open simple snackbar</Button>
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right"
+        }}
+        open={openSnackbar.value}
+        autoHideDuration={5000}
+        onClose={handleCloseSnackbar}
+      >
+        <SnackbarContent
+          css={`
+            background-color: green;
+            display: inline-flex;
+            justify-content: space-between;
+            align-items: center;
+            div {
+              margin: 0 !important;
+            }
+          `}
+          message={
+            <span
+              id="message-id"
+              css={`
+                display: inline-flex;
+                align-items: flex-end;
+              `}
+            >
+              <CheckCircleIcon />
+              <span css={`
+                margin-left: 25%;
+              `}>{openSnackbar.message}</span>
+            </span>
+          }
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={handleCloseSnackbar}
+            >
+              <CloseIcon />
+            </IconButton>
+          ]}
+        />
+      </Snackbar>
     </Container>
   );
 };

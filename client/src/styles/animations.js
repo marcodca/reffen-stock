@@ -12,7 +12,7 @@ opacity: 1;
 `;
 
 export const SlideIn = styled.div`
-  animation: ${slideInKeyframes} 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation: ${slideInKeyframes} 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 `;
 
 const slideInBlurredKeyFrames = keyframes`
