@@ -77,16 +77,33 @@ const formatGroupLabel = ({ label, icon, options }) => (
 
 const AddMissingProductRecord = ({
   products: { products },
+  missingProducts: { missingProductRecords },
   addNewMissingProductRecord,
   onClose,
   openAddProductDialog
 }) => {
+  //Select Input
+
+  const [selectInput, setSelectInput] = useState(null);
+
+  const handleSelectInput = e => {
+    const { value } = e;
+    setSelectInput(value);
+  };
+
+  //Making the options for the select input
   //All the the products in a value-label format.
   const productOptions = products
     ? products.map(elem => ({
         value: elem.id,
         label: elem.name,
-        category: elem.category
+        category: elem.category,
+        
+        //If the product is already reported as missing, it's gonna be disabled in the input
+        isDisabled : (() => {
+          const missingProductsIds = missingProductRecords ? missingProductRecords.map( ({product}) => { return product.id}) : [];
+          return missingProductsIds.includes(elem.id)
+        })()
       }))
     : [];
 
@@ -105,17 +122,27 @@ const AddMissingProductRecord = ({
     });
   });
 
-  //Select Input
-
-  const [selectInput, setSelectInput] = useState(null);
-
-  const handleSelectInput = e => {
-    const { value } = e;
-    setSelectInput(value);
-  };
-
   //Product description
   const ProductDescriptionDisplay = styled.div``;
+
+  //message to be displayed when there are no options in the slect input
+  const noOptionsMessage = () => (
+    <span>
+      No matchs, try{" "}
+      <span
+        css={`
+          font-weight: bold;
+        `}
+        onClick={openAddProductDialog}
+      >
+        creating a new product
+      </span>
+    </span>
+  );
+
+  const [selectedProduct] = products
+    ? products.filter(product => product.id === selectInput)
+    : [""];
 
   //Comment input
   const [commentInput, setCommentInput] = useState("");
@@ -192,25 +219,6 @@ const AddMissingProductRecord = ({
     onClose && onClose();
   };
 
-  //message to be displayed when there are no options in the slect input
-  const noOptionsMessage = () => (
-    <span>
-      No matchs, try{" "}
-      <span
-        css={`
-          font-weight: bold;
-        `}
-        onClick={openAddProductDialog}
-      >
-        creating a new product
-      </span>
-    </span>
-  );
-
-  const [selectedProduct] = products
-    ? products.filter(product => product.id === selectInput)
-    : [""];
-
   return (
     <Container>
       <Typography
@@ -258,9 +266,10 @@ const AddMissingProductRecord = ({
         value={commentInput}
       />
       <FormControlLabel
-        style={{
-          alignContent: "center"
-        }}
+        css={`
+          align-content: center;
+          margin-top: 1em;
+        `}
         control={
           <Switch
             checked={isImportant}
@@ -286,5 +295,6 @@ export default compose(
   graphql(getProductsQuery, { name: "products" }),
   graphql(addMissingProductRecordMutation, {
     name: "addNewMissingProductRecord"
-  })
+  }),
+  graphql(getMissingProductsRecordsQuery, { name: "missingProducts" })
 )(AddMissingProductRecord);
