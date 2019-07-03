@@ -6,7 +6,7 @@ import {
   getMissingProductsRecordsQuery
 } from "../queries";
 import { graphql, compose } from "react-apollo";
-import styled from "styled-components";
+import styled from "styled-components/macro";
 import { categories } from "../utlis";
 import { exclamationMark } from "../styles/icons";
 
@@ -14,8 +14,17 @@ import TextField from "@material-ui/core/TextField";
 import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
 
 //Styled-Components
+
+const Container = styled.div`
+  width: 90%;
+  padding: 3%;
+  margin: 0 auto;
+  margin-top: 2em;
+`;
+
 const StyledGroup = styled.div`
   display: flex;
   align-items: center;
@@ -68,10 +77,10 @@ const formatGroupLabel = ({ label, icon, options }) => (
 
 const AddMissingProductRecord = ({
   products: { products },
-  addNewMissingProductRecord, onClose
+  addNewMissingProductRecord,
+  onClose,
+  openAddProductDialog
 }) => {
-
-  console.log(products)
   //All the the products in a value-label format.
   const productOptions = products
     ? products.map(elem => ({
@@ -102,15 +111,20 @@ const AddMissingProductRecord = ({
 
   const handleSelectInput = e => {
     const { value } = e;
-    console.log(value)
     setSelectInput(value);
   };
+
+  //Product description
+  const ProductDescriptionDisplay = styled.div``;
 
   //Comment input
   const [commentInput, setCommentInput] = useState("");
 
   const handleCommentInput = e => {
-    const { value } = e.target;
+    let { value } = e.target;
+
+    value = value.length < 50 ? value : value.slice(0, 50);
+
     setCommentInput(value);
   };
 
@@ -124,13 +138,27 @@ const AddMissingProductRecord = ({
 
   const IsImportantLabel = (
     <span
-      style={{
-        display: "inline-flex",
-        alignContent: "center"
-      }}
+      css={`
+        display: inline-flex;
+        align-content: center;
+      `}
     >
-      <ExclamationMarkIcon src={exclamationMark} isChecked={isImportant} />
-      <span>Highlight record</span>
+      <ExclamationMarkIcon
+        src={exclamationMark}
+        isChecked={isImportant}
+        css={`
+          position: relative;
+          top: 9px;
+          left: 17px;
+        `}
+      />
+      <span
+        css={`
+          text-align: center;
+        `}
+      >
+        Highlight record
+      </span>
     </span>
   );
 
@@ -139,8 +167,8 @@ const AddMissingProductRecord = ({
   const handleReportNewMissingProductRecord = () => {
     //Extract the values
     const productId = selectInput,
-    markedAsImportant = isImportant,
-    comment = commentInput.trim();
+      markedAsImportant = isImportant,
+      comment = commentInput.trim();
 
     addNewMissingProductRecord({
       variables: {
@@ -151,27 +179,79 @@ const AddMissingProductRecord = ({
       //refetch the get Missing Product Records query
       refetchQueries: [{ query: getMissingProductsRecordsQuery }]
     });
+    //We clear the inputs and close, calling cancel functionality
+    handleCancel();
+  };
+
+  const handleCancel = () => {
     //Clear the input values
     setSelectInput(null);
     setCommentInput("");
     setIsImportant(false);
     //close the drawer on mobile
-    onClose();
+    onClose && onClose();
   };
 
+  //message to be displayed when there are no options in the slect input
+  const noOptionsMessage = () => (
+    <span>
+      No matchs, try{" "}
+      <span
+        css={`
+          font-weight: bold;
+        `}
+        onClick={openAddProductDialog}
+      >
+        creating a new product
+      </span>
+    </span>
+  );
+
+  const [selectedProduct] = products
+    ? products.filter(product => product.id === selectInput)
+    : [""];
+
   return (
-    <form>
+    <Container>
+      <Typography
+        variant="h5"
+        align="center"
+        css={`
+          margin-bottom: 1em;
+        `}
+      >
+        Report new missing product
+      </Typography>
       <Select
         placeholder="Search for a product"
         options={groupedProductOptions}
         formatGroupLabel={formatGroupLabel}
         onChange={handleSelectInput}
-        value={selectInput ? undefined : "" }
+        value={selectInput ? undefined : ""}
+        noOptionsMessage={noOptionsMessage}
       />
-
+      <ProductDescriptionDisplay>
+        {selectedProduct && selectedProduct.description && (
+          <span
+            css={`
+              margin-top: 0.5em;
+              margin-left: 2px;
+            `}
+          >
+            <span
+              css={`
+                font-weight: bold;
+              `}
+            >
+              Description:
+            </span>
+            {" " + selectedProduct.description}
+          </span>
+        )}
+      </ProductDescriptionDisplay>
       <TextField
         style={{ zIndex: "-0" }}
-        label="Comment"
+        label="Optional comment"
         margin="normal"
         variant="outlined"
         onChange={handleCommentInput}
@@ -197,8 +277,9 @@ const AddMissingProductRecord = ({
       >
         Report new missing product
       </Button>
-      <Button>Cancel</Button>
-    </form>
+      <Button onClick={handleCancel}>Cancel</Button>
+      <Button onClick={openAddProductDialog}>Create new product</Button>
+    </Container>
   );
 };
 export default compose(

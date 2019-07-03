@@ -57,8 +57,7 @@ const MainView = (props, context) => {
   const Container = styled.div`
     flex-grow: 1;
     display: flex;
-;
-`
+  `;
 
   //Drawer
 
@@ -73,7 +72,7 @@ const MainView = (props, context) => {
 
   const AppBar = styled(appBar)`
     margin-left: ${drawerWidth};
-    background-color: ${props => props.theme.primary };
+    background-color: ${props => props.theme.primary};
     ${media.down.sm`width :calc(100% - ${drawerWidth}px)`};
     ${props =>
       tabsValue === 0
@@ -95,64 +94,73 @@ const MainView = (props, context) => {
   `;
 
   return (
-            <Container>
-            <CssBaseline />
-            <AppBar position="fixed">
-              <Tabs variant="fullWidth" value={tabsValue} onChange={handleChange}>
-                <LinkTab label="Out of stock" />
-                <LinkTab label="Cocktail counter" />
-              </Tabs>
-            </AppBar>
-            <DrawerNav aria-label="Report new missing product">
-              <Hidden smUp implementation="css">
-                <Drawer
-                  container={container}
-                  variant="temporary"
-                  anchor={"left"}
-                  open={mobileOpen}
-                  onClose={handleDrawerToggle}
-                  ModalProps={{
-                    keepMounted: true // Better open performance on mobile.
-                  }}
-                >
-                  <SlideInBlurred>
-                    <AddMissingProductRecord onClose={handleDrawerToggle}/>
-                  </SlideInBlurred>
-                </Drawer>
-              </Hidden>
-              <Hidden xsDown implementation="css">
-                <Drawer
-                  variant="persistent" //middle way between permanent and temporary
-                  open={tabsValue === 0}
-                  anchor={"left"}
-                >
-                  <AddMissingProductRecord />
-                </Drawer>
-              </Hidden>
-            </DrawerNav>
-            {tabsValue === 0 && (
-              <TabContainer>
-                <Products />
-                <button onClick={handleClickOpen}>open</button>
-                <Dialog fullScreen open={open}>
-                  <SlideIn>
-                    <AddProduct onClose={handleClose}  />
-                  </SlideIn>
-                </Dialog>
-                <Hidden smUp implementation="css">
-                  <Button
-                    color="primary"
-                    aria-label="Open drawer"
-                    edge="start"
-                    onClick={handleDrawerToggle}
-                  >
-                    Open drawer
-                  </Button>
-                </Hidden>
-              </TabContainer>
-            )}
-            {tabsValue === 1 && <TabContainer>Page Two</TabContainer>}
-          </Container>
+    <Container>
+      <CssBaseline />
+      <AppBar position="fixed">
+        <Tabs variant="fullWidth" value={tabsValue} onChange={handleChange}>
+          <LinkTab label="Out of stock" />
+          <LinkTab label="Cocktail counter" />
+        </Tabs>
+      </AppBar>
+      {
+        //Mobile
+      }
+      <DrawerNav aria-label="Report new missing product">
+        <Hidden smUp implementation="css">
+          <Drawer
+            container={container}
+            variant="temporary"
+            anchor={"left"}
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            ModalProps={{
+              keepMounted: true // Better open performance on mobile.
+            }}
+          >
+            <SlideInBlurred>
+              <AddMissingProductRecord
+                onClose={handleDrawerToggle}
+                openAddProductDialog={handleClickOpen}
+              />
+            </SlideInBlurred>
+          </Drawer>
+        </Hidden>
+        {
+          //Desktop
+        }
+        <Hidden xsDown implementation="css">
+          <Drawer
+            variant="persistent" //middle way between permanent and temporary
+            open={tabsValue === 0}
+            anchor={"left"}
+          >
+            <AddMissingProductRecord openAddProductDialog={handleClickOpen} />
+          </Drawer>
+        </Hidden>
+      </DrawerNav>
+      {tabsValue === 0 && (
+        <TabContainer>
+          <Products />
+          <button onClick={handleClickOpen}>open</button>
+          <Dialog fullScreen open={open}>
+            <SlideIn>
+              <AddProduct onClose={handleClose} />
+            </SlideIn>
+          </Dialog>
+          <Hidden smUp implementation="css">
+            <Button
+              color="primary"
+              aria-label="Open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+            >
+              Open drawer
+            </Button>
+          </Hidden>
+        </TabContainer>
+      )}
+      {tabsValue === 1 && <TabContainer>Page Two</TabContainer>}
+    </Container>
   );
 };
 export default MainView;

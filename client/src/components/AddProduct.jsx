@@ -179,19 +179,18 @@ const AddProduct = props => {
 `
 
   return (
-    <div
-      style={{
-        width: "43vw",
-        minWidth: "calc(333px - 2rem)",
-        padding: "2%",
-        borderRadius: "3%",
-        margin: "0 auto",
-        paddingBottom: "2rem",
-        textAlign: "center",
-        display: "flex",
-        flexDirection: "column",
-        backgroundColor: "rgba(178, 177, 207, 0.1)"
-      }}
+    <div css={`        
+      width: 43vw;
+      min-width: calc(333px - 2rem);
+      padding: 2%;
+      border-radius: 3%;
+      margin: 0 auto;
+      padding-bottom: 2rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      background-color: rgba(178, 177, 207, 0.1);
+    `}
     >
       <Typography variant="h5">Create new product</Typography>
       {//Erw, an issue on mobile (android), the viw is scroll to bottom when the input get focus and the keyboard pops up, I'll have to chek on that later
