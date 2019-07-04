@@ -1,3 +1,4 @@
+export { default as logoIcon } from './logo-white.png';
 export { default as beerBottle } from './beer-bottle.svg';
 export { default as beerPremiumBottle } from './beer-premium-bottle.svg';
 export { default as beerKeg } from './beer-keg.svg';
