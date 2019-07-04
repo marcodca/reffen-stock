@@ -144,6 +144,7 @@ const AddMissingProductRecord = ({
       <span
         css={`
           font-weight: bold;
+          cursor: pointer;
         `}
         onClick={openAddProductDialog}
       >

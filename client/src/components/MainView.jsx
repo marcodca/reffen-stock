@@ -208,7 +208,7 @@ const MainView = (props, context) => {
           vertical: "bottom",
           horizontal: "right"
         }}
-        open={openSnackbar.value}
+        open={openSnackbar.value}   
         autoHideDuration={5000}
         onClose={handleCloseSnackbar}
       >
@@ -218,6 +218,7 @@ const MainView = (props, context) => {
             display: inline-flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: nowrap;
             div {
               margin: 0 !important;
             }
@@ -227,7 +228,7 @@ const MainView = (props, context) => {
               id="message-id"
               css={`
                 display: inline-flex;
-                align-items: flex-end;
+                align-items: center;
               `}
             >
               <CheckCircleIcon />
