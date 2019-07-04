@@ -142,7 +142,7 @@ const AddProduct = props => {
       .then(({ data: { addProduct } }) => {
         props.setOpenSnackbar({
           value: true,
-          message: `${addProduct.name} was sucsessfully created`
+          message: `${addProduct.name} was successfully created`
         });
       });
 

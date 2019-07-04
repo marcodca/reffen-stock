@@ -6,6 +6,7 @@ import AddMissingProductRecord from "./AddMissingProductRecord";
 import styled, { css } from "styled-components/macro";
 import media from "../styles/media";
 import { SlideIn, SlideInBlurred } from "../styles/animations";
+import { logoIcon } from '../styles/icons';
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
@@ -128,6 +129,13 @@ const MainView = (props, context) => {
     <Container>
       <CssBaseline />
       <AppBar position="fixed">
+        <img
+          css={`
+            margin: 1% auto 0 auto;
+          `}
+          width={85} 
+          src={logoIcon}
+        />
         <Tabs variant="fullWidth" value={tabsValue} onChange={handleChange}>
           <LinkTab label="Out of stock" />
           <LinkTab label="Cocktail counter" />
@@ -152,6 +160,7 @@ const MainView = (props, context) => {
               <AddMissingProductRecord
                 onClose={handleDrawerToggle}
                 openAddProductDialog={handleClickOpen}
+                setOpenSnackbar={setOpenSnackbar} 
               />
             </SlideInBlurred>
           </Drawer>
@@ -165,7 +174,7 @@ const MainView = (props, context) => {
             open={tabsValue === 0}
             anchor={"left"}
           >
-            <AddMissingProductRecord openAddProductDialog={handleClickOpen} />
+            <AddMissingProductRecord openAddProductDialog={handleClickOpen} setOpenSnackbar={setOpenSnackbar} />
           </Drawer>
         </Hidden>
       </DrawerNav>
@@ -194,7 +203,6 @@ const MainView = (props, context) => {
         </TabContainer>
       )}
       {tabsValue === 1 && <TabContainer>Page Two</TabContainer>}
-      <Button onClick={handleClickSnackbarButton}>Open simple snackbar</Button>
       <Snackbar
         anchorOrigin={{
           vertical: "bottom",

@@ -87,7 +87,8 @@ const AddMissingProductRecord = ({
   missingProducts: { missingProductRecords },
   addNewMissingProductRecord,
   onClose,
-  openAddProductDialog
+  openAddProductDialog,
+  setOpenSnackbar
 }) => {
   //Select Input
 
@@ -216,7 +217,10 @@ const AddMissingProductRecord = ({
       },
       //refetch the get Missing Product Records query
       refetchQueries: [{ query: getMissingProductsRecordsQuery }]
-    });
+    })
+      .then( ({data : { addMissingProductRecord }}) => {
+        setOpenSnackbar({value : true, message : `${addMissingProductRecord.product.name} has successfully been reported missing`})
+      })
     //We clear the inputs and close, calling cancel functionality
     handleCancel();
   };
