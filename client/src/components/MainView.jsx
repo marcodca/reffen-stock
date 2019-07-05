@@ -66,7 +66,7 @@ const MainView = (props, context) => {
 
   const Tabs = styled(tabs)`
     flex-basis: 90%;
-    ${media.up.sm`width: 100%`};
+    ${media.down.sm`width: 100%`};
   `;
 
   const Container = styled.div`
@@ -136,7 +136,7 @@ const MainView = (props, context) => {
         <img
           css={`
             margin: 1% auto 0 auto;
-            align-self: flex-start;
+            align-self: baseline;
           `}
           width={85}
           src={logoIcon}

@@ -5,8 +5,13 @@ import styled from "styled-components/macro";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 
+import media from "../styles/media";
+
 const Container = styled.div`
-  margin-top: 75px;
+  margin-top: 35px;
+  ${media.down.sm`
+    margin-top: 75px
+  `};
 `;
 
 const MissingProductRecords = ({
