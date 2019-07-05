@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import Products from "./Products";
+import MissingProductRecords from "./MissingProductRecords";
 import AddProduct from "./AddProduct";
 import AddMissingProductRecord from "./AddMissingProductRecord";
 
 import styled, { css } from "styled-components/macro";
 import media from "../styles/media";
 import { SlideIn, SlideInBlurred } from "../styles/animations";
-import { logoIcon } from '../styles/icons';
+import { logoIcon } from "../styles/icons";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
@@ -14,7 +15,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
 
 import appBar from "@material-ui/core/AppBar";
-import Tabs from "@material-ui/core/Tabs";
+import tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 
@@ -63,6 +64,11 @@ const MainView = (props, context) => {
     />
   );
 
+  const Tabs = styled(tabs)`
+    flex-basis: 90%;
+    ${media.up.sm`width: 100%`};
+  `;
+
   const Container = styled.div`
     flex-grow: 1;
     display: flex;
@@ -81,8 +87,12 @@ const MainView = (props, context) => {
 
   const AppBar = styled(appBar)`
     margin-left: ${drawerWidth};
+    flex-direction: row;
+    align-items: center;
     background-color: ${props => props.theme.primary};
-    ${media.down.sm`width :calc(100% - ${drawerWidth}px)`};
+    ${media.up.sm`width :calc(100% - ${drawerWidth}px)
+    `};
+    ${media.down.sm`flex-direction: column`};
     ${props =>
       tabsValue === 0
         ? ""
@@ -92,7 +102,7 @@ const MainView = (props, context) => {
   `;
 
   const DrawerNav = styled.nav`
-    ${media.down.sm`width : ${drawerWidth}px;`}
+    ${media.up.sm`width : ${drawerWidth}px;`}
     flex-shrink: 0;
   `;
 
@@ -105,22 +115,16 @@ const MainView = (props, context) => {
   //Snackbar
 
   const [openSnackbar, setOpenSnackbar] = React.useState({
-    value : false,
+    value: false,
     message: null
   });
-
-
-
-  function handleClickSnackbarButton(message) {
-    setOpenSnackbar({value : true, message});
-  }
 
   function handleCloseSnackbar(event, reason) {
     if (reason === "clickaway") {
       return;
     }
     setOpenSnackbar({
-      value : false,
+      value: false,
       message: null
     });
   }
@@ -132,9 +136,11 @@ const MainView = (props, context) => {
         <img
           css={`
             margin: 1% auto 0 auto;
+            align-self: flex-start;
           `}
-          width={85} 
+          width={85}
           src={logoIcon}
+          alt=""
         />
         <Tabs variant="fullWidth" value={tabsValue} onChange={handleChange}>
           <LinkTab label="Out of stock" />
@@ -160,7 +166,7 @@ const MainView = (props, context) => {
               <AddMissingProductRecord
                 onClose={handleDrawerToggle}
                 openAddProductDialog={handleClickOpen}
-                setOpenSnackbar={setOpenSnackbar} 
+                setOpenSnackbar={setOpenSnackbar}
               />
             </SlideInBlurred>
           </Drawer>
@@ -174,19 +180,23 @@ const MainView = (props, context) => {
             open={tabsValue === 0}
             anchor={"left"}
           >
-            <AddMissingProductRecord openAddProductDialog={handleClickOpen} setOpenSnackbar={setOpenSnackbar} />
+            <AddMissingProductRecord
+              openAddProductDialog={handleClickOpen}
+              setOpenSnackbar={setOpenSnackbar}
+            />
           </Drawer>
         </Hidden>
       </DrawerNav>
       {tabsValue === 0 && (
         <TabContainer>
+          <MissingProductRecords />
           <Products />
           <button onClick={handleClickOpen}>open</button>
           <Dialog fullScreen open={open}>
             <SlideIn>
-              <AddProduct 
-                onClose={handleClose} 
-                setOpenSnackbar={setOpenSnackbar} 
+              <AddProduct
+                onClose={handleClose}
+                setOpenSnackbar={setOpenSnackbar}
               />
             </SlideIn>
           </Dialog>
@@ -208,7 +218,7 @@ const MainView = (props, context) => {
           vertical: "bottom",
           horizontal: "right"
         }}
-        open={openSnackbar.value}   
+        open={openSnackbar.value}
         autoHideDuration={5000}
         onClose={handleCloseSnackbar}
       >
@@ -232,9 +242,13 @@ const MainView = (props, context) => {
               `}
             >
               <CheckCircleIcon />
-              <span css={`
-                margin-left: 25%;
-              `}>{openSnackbar.message}</span>
+              <span
+                css={`
+                  margin-left: 25%;
+                `}
+              >
+                {openSnackbar.message}
+              </span>
             </span>
           }
           action={[
