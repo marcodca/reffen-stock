@@ -11,7 +11,7 @@ const screens = {
 const media = {
   down : Object.keys(screens).reduce((acc, label) => {
     acc[label] = (...args) => css`
-      @media (min-width: ${screens[label].replace("px", "") / 16}em) {
+      @media (max-width: ${screens[label].replace("px", "") / 16}em) {
         ${css(...args)}
       }
     `;
@@ -21,7 +21,7 @@ const media = {
   ,
   up : Object.keys(screens).reduce((acc, label) => {
     acc[label] = (...args) => css`
-      @media (max-width: ${screens[label].replace("px", "") / 16}em) {
+      @media (min-width: ${screens[label].replace("px", "") / 16}em) {
         ${css(...args)}
       }
     `;
