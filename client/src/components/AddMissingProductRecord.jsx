@@ -64,7 +64,7 @@ const ExclamationMarkIcon = styled.img`
 const CloseIcon = styled(closeIcon)`
   position: absolute;
   left: 85%;
-  bottom: 93%;
+  bottom: 95%;
   cursor: pointer;
 `
 

@@ -8,11 +8,18 @@ import Paper from "@material-ui/core/Paper";
 import media from "../styles/media";
 
 const Container = styled.div`
-  margin-top: 35px;
+  width: 100%;
+  margin-top: 5.5rem;
   ${media.down.sm`
-    margin-top: 75px
+    margin-top: 7.5rem;
   `};
 `;
+
+const MissingProductCard = styled(Paper)`
+  width: 90%;
+  padding: 3%;
+  margin: 4% auto;
+`
 
 const MissingProductRecords = ({
   products: { products },
@@ -23,11 +30,13 @@ const MissingProductRecords = ({
       <Container>
         {missingProductRecords &&
           missingProductRecords.map(missingProduct => (
-
-            <Paper>
+            <MissingProductCard>
               {console.log(missingProduct)}
-              <Typography variant="h4">{missingProduct.product.name}</Typography>
-            </Paper>
+              <Typography variant="h6">{missingProduct.product.name}</Typography>
+              <Typography variant='subtitle2'>
+                Missing since: {missingProduct.dateAdded}
+              </Typography>         
+            </MissingProductCard>
           ))}
       </Container>
     </>

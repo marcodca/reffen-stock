@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Products from "./Products";
 import MissingProductRecords from "./MissingProductRecords";
 import AddProduct from "./AddProduct";
 import AddMissingProductRecord from "./AddMissingProductRecord";
@@ -17,7 +16,6 @@ import Dialog from "@material-ui/core/Dialog";
 import appBar from "@material-ui/core/AppBar";
 import tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
 import drawer from "@material-ui/core/Drawer";
@@ -46,13 +44,10 @@ const MainView = (props, context) => {
     setTabsValue(newValue);
   };
 
-  const TabContainer = props => {
-    return (
-      <Typography component="div" style={{ padding: 8 * 3 }}>
-        {props.children}
-      </Typography>
-    );
-  };
+  const TabContainer = styled.div`
+    padding: 24;
+    width: 100%;
+  `
 
   const LinkTab = props => (
     <Tab
@@ -189,8 +184,7 @@ const MainView = (props, context) => {
       </DrawerNav>
       {tabsValue === 0 && (
         <TabContainer>
-          <MissingProductRecords />
-          <Products />
+          <MissingProductRecords/>
           <button onClick={handleClickOpen}>open</button>
           <Dialog fullScreen open={open}>
             <SlideIn>
