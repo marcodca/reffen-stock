@@ -52,11 +52,7 @@ export const getMissingProductsRecordsQuery = gql`
 `;
 
 export const addMissingProductRecordMutation = gql`
-  mutation(
-    $productId: ID!
-    $markedAsImportant: Boolean!
-    $comment: String
-  ) {
+  mutation($productId: ID!, $markedAsImportant: Boolean!, $comment: String) {
     addMissingProductRecord(
       productId: $productId
       markedAsImportant: $markedAsImportant
@@ -75,4 +71,16 @@ export const addMissingProductRecordMutation = gql`
       }
     }
   }
+`;
+
+export const deleteMissingProductRecord = gql`
+mutation($missingProductRecordId: ID!) {
+  deleteMissingProductRecord(id: $missingProductRecordId){
+    id
+    product{
+      id
+      name
+    }
+  }
+}
 `;

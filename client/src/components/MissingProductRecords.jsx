@@ -1,6 +1,6 @@
 import React from "react";
 import { graphql, compose } from "react-apollo";
-import { getProductsQuery, getMissingProductsRecordsQuery } from "../queries";
+import { getProductsQuery, getMissingProductsRecordsQuery, deleteMissingProductRecord } from "../queries";
 import styled from "styled-components/macro";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
@@ -23,18 +23,38 @@ const MissingProductCard = styled(Paper)`
 
 const MissingProductRecords = ({
   products: { products },
-  missingProductRecords: { missingProductRecords }
+  missingProductRecords: { missingProductRecords },
+  deleteMissingProductRecord
 }) => {
+
+  const handleDeleteMissingProductRecord = (id) => {
+
+    deleteMissingProductRecord({
+      variables: {
+        missingProductRecordId : id
+      },
+      //refetch the get Missing Product Records query
+      refetchQueries: [{ query: getMissingProductsRecordsQuery }]
+    })
+  }
+
   return (
     <>
       <Container>
         {missingProductRecords &&
           missingProductRecords.map(missingProduct => (
-            <MissingProductCard>
-              {console.log(missingProduct)}
+            <MissingProductCard key={missingProduct.id}>
+              {/* {console.log(missingProduct)} */}
               <Typography variant="h6">{missingProduct.product.name}</Typography>
               <Typography variant='subtitle2'>
                 Missing since: {missingProduct.dateAdded}
+                <button
+                  onClick={()=>{
+                    handleDeleteMissingProductRecord(missingProduct.id)
+                  }}
+                >
+                  Delete missing product record
+                </button>
               </Typography>         
             </MissingProductCard>
           ))}
@@ -45,5 +65,6 @@ const MissingProductRecords = ({
 
 export default compose(
   graphql(getProductsQuery, { name: "products" }),
-  graphql(getMissingProductsRecordsQuery, { name: "missingProductRecords" })
+  graphql(getMissingProductsRecordsQuery, { name: "missingProductRecords" }),
+  graphql(deleteMissingProductRecord, {name : 'deleteMissingProductRecord'})
 )(MissingProductRecords);
