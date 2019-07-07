@@ -8,11 +8,10 @@ import {
 import styled from "styled-components/macro";
 import media from "../styles/media";
 
-
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import IconButton from "@material-ui/core/IconButton";
-import MoveToInbox from "@material-ui/icons/MoveToInbox";
+import { inStock } from "../styles/icons";
 
 const Container = styled.div`
   width: 100%;
@@ -59,27 +58,45 @@ const MissingProductRecords = ({
                     margin-top: 1%;
                     display: flex;
                     justify-content: space-between;
+                    align-items: center;
+                    ${media.down.sm`align-items: baseline;`}
                   `}
                 >
-                  <Typography variant="subtitle1">
-                    <b>Missing since:</b> {missingProduct.dateAdded}
+                  <Typography
+                    variant="subtitle1"
+                    css={`
+                      ${media.down.sm`display: flex; flex-direction: column;`}
+                    `}
+                  >
+                    <b>Missing since: </b>
+                    {missingProduct.dateAdded}
                   </Typography>
 
                   {missingProduct.comment && (
-                    <Typography variant="subtitle1">
-                      <b>Comment:</b> {missingProduct.comment}
+                    <Typography
+                      variant="subtitle1"
+                      css={`
+                        ${media.down
+                          .sm`display: flex; flex-direction: column; width: 33%; text-align : center;`}
+                      `}
+                    >
+                      <b>Comment: </b> {missingProduct.comment}
                     </Typography>
                   )}
-
-                    <MoveToInbox/>
-
-                  {/* <button
+                  <IconButton
                     onClick={() => {
                       handleDeleteMissingProductRecord(missingProduct.id);
                     }}
+                    css={`
+                      span {
+                        display: flex;
+                        flex-direction: column;
+                      }
+                    `}
                   >
-                    Delete missing product record
-                  </button> */}
+                    <img src={inStock} width={40} alt="in-stock icon"/>
+                    <Typography variant="button">Mark as<br/>in stock</Typography>
+                  </IconButton>
                 </div>
               </Typography>
             </MissingProductCard>
