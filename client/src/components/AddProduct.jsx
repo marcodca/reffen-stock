@@ -37,10 +37,9 @@ const AddProduct = props => {
   const [nameInput, setNameInput] = useState(defaultInputs.name);
 
   const handleNameInput = e => {
-    e.target.focus({ preventScroll: true });
     let { value } = e.target;
 
-    if (value.length >= 4) {
+    if (value.length >= 3) {
       value = value.length < 25 ? value : value.slice(0, 25);
       setNameInput({ value, isValid: true });
     } else {
@@ -210,7 +209,7 @@ const AddProduct = props => {
         variant="outlined"
         onChange={handleNameInput}
         value={nameInput.value}
-        helperText={nameInput.isValid ? null : "At least 4 characters"}
+        helperText={nameInput.isValid ? null : "At least 3 characters"}
         error={nameInput.isValid ? false : true}
         css={TextInputStyle}
       />
