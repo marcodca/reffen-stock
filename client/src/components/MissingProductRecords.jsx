@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { graphql, compose } from "react-apollo";
 import {
   getProductsQuery,
@@ -7,7 +7,7 @@ import {
 } from "../queries";
 import styled from "styled-components/macro";
 import media from "../styles/media";
-import { bars } from "../utlis";
+import { bars, categories } from "../utlis";
 
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
@@ -24,11 +24,53 @@ const Container = styled.div`
   `};
 `;
 
-const MissingProductCard = styled(Paper)`
+const StyledProductCard = styled(Paper)`
   width: 90%;
   padding: 3%;
   margin: 4% auto;
 `;
+
+const CategoryDisplay = ({ category, children }) => {
+  const Line = () => (
+    <div
+      css={`
+        width: 70%;
+        height: 2px;
+        background-color: grey;
+        border-radius: 5%;
+      `}
+    />
+  );
+
+  return (
+    <>
+      <div
+        css={`
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 95%;
+          margin: 0 auto;
+        `}
+      >
+        <Line />
+        <div
+          css={`
+            display: flex;
+            padding: 4%;
+          `}
+        >
+          <Typography variant="subtitle2">{category.label}</Typography>
+          <img width="24" src={category.icon} alt="" />
+        </div>
+        <Line />
+      </div>
+      {children}
+    </>
+  );
+};
+
+//When a missing product record is deleted (marked as in stock) the value of the selectBar gets set again to "all bars" check how to fix this with useEffect
 
 const MissingProductRecords = ({
   products: { products },
@@ -39,6 +81,73 @@ const MissingProductRecords = ({
   const [selectBar, setSelectBar] = useState("All bars");
 
   //
+  const MissingProductCard = ({ missingProduct }) => {
+    const {
+      id,
+      dateAdded,
+      comment,
+      product: { name }
+    } = missingProduct;
+
+    return (
+      <StyledProductCard>
+        <Typography variant="h6">{name}</Typography>
+        <Typography variant="subtitle2">
+          <div
+            css={`
+              margin-top: 1%;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              ${media.down.sm`align-items: baseline;`}
+            `}
+          >
+            <Typography
+              variant="subtitle1"
+              css={`
+                ${media.down.sm`display: flex; flex-direction: column;`}
+              `}
+            >
+              <b>Missing since: </b>
+              {dateAdded}
+            </Typography>
+
+            {comment && (
+              <Typography
+                variant="subtitle1"
+                css={`
+                  ${media.down
+                    .sm`display: flex; flex-direction: column; width: 33%; text-align : center;`}
+                `}
+              >
+                <b>Comment: </b> {comment}
+              </Typography>
+            )}
+            <Button
+              onClick={() => {
+                handleDeleteMissingProductRecord(id);
+              }}
+              css={`
+                span {
+                  display: flex;
+                  flex-direction: column;
+                }
+              `}
+            >
+              <img src={inStock} width={40} alt="in-stock icon" />
+              <Typography variant="button">
+                Mark as
+                <br />
+                in stock
+              </Typography>
+            </Button>
+          </div>
+        </Typography>
+      </StyledProductCard>
+    );
+  };
+
+  //
 
   const missingProductRecordsByBar =
     selectBar === "All bars"
@@ -47,6 +156,14 @@ const MissingProductRecords = ({
           return record.product.availableInBars.includes(selectBar);
         });
 
+  const missingProductRecordsByBarAndCategory = missingProductRecordsByBar
+    ? missingProductRecordsByBar.reduce((acc, elem) => {
+        if (!(elem.product.category in acc)) acc[elem.product.category] = [];
+        acc[elem.product.category].push(elem);
+        return acc;
+      }, {})
+    : null;
+
   const handleDeleteMissingProductRecord = id => {
     deleteMissingProductRecord({
       variables: {
@@ -54,16 +171,12 @@ const MissingProductRecords = ({
       },
       //refetch the get Missing Product Records query
       refetchQueries: [{ query: getMissingProductsRecordsQuery }]
-    }).then(
-      ({
-        data: { deleteMissingProductRecord: deleteMissingProductRecord }
-      }) => {
-        setOpenSnackbar({
-          value: true,
-          message: `${deleteMissingProductRecord.product.name} is in stock now`
-        });
-      }
-    );
+    }).then(({ data: { deleteMissingProductRecord } }) => {
+      setOpenSnackbar({
+        value: true,
+        message: `${deleteMissingProductRecord.product.name} is in stock now`
+      });
+    });
   };
 
   return (
@@ -76,10 +189,10 @@ const MissingProductRecords = ({
             align-items: baseline;
           `}
         >
-          <Typography variant='button'>Show missing products for:</Typography>
+          <Typography variant="button">Show missing products for:</Typography>
           <Select
             css={`
-            margin-left: 0.75rem;
+              margin-left: 0.75rem;
             `}
             value={selectBar}
             onChange={event => {
@@ -96,65 +209,24 @@ const MissingProductRecords = ({
           </Select>
         </div>
 
-        {missingProductRecordsByBar &&
-          missingProductRecordsByBar.map(missingProduct => (
-            <MissingProductCard key={missingProduct.id}>
-              <Typography variant="h6">
-                {missingProduct.product.name}
-              </Typography>
-              <Typography variant="subtitle2">
-                <div
-                  css={`
-                    margin-top: 1%;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    ${media.down.sm`align-items: baseline;`}
-                  `}
-                >
-                  <Typography
-                    variant="subtitle1"
-                    css={`
-                      ${media.down.sm`display: flex; flex-direction: column;`}
-                    `}
-                  >
-                    <b>Missing since: </b>
-                    {missingProduct.dateAdded}
-                  </Typography>
+        {missingProductRecordsByBarAndCategory &&
+          Object.keys(missingProductRecordsByBarAndCategory).map(
+            (category, index) => {
+              const [productCat] = categories.filter(elem => {
+                return elem.label === category;
+              });
 
-                  {missingProduct.comment && (
-                    <Typography
-                      variant="subtitle1"
-                      css={`
-                        ${media.down
-                          .sm`display: flex; flex-direction: column; width: 33%; text-align : center;`}
-                      `}
-                    >
-                      <b>Comment: </b> {missingProduct.comment}
-                    </Typography>
+              return (
+                <CategoryDisplay category={productCat}>
+                  {missingProductRecordsByBarAndCategory[category].map(
+                    missingProduct => (
+                      <MissingProductCard missingProduct={missingProduct} />
+                    )
                   )}
-                  <Button
-                    onClick={() => {
-                      handleDeleteMissingProductRecord(missingProduct.id);
-                    }}
-                    css={`
-                      span {
-                        display: flex;
-                        flex-direction: column;
-                      }
-                    `}
-                  >
-                    <img src={inStock} width={40} alt="in-stock icon" />
-                    <Typography variant="button">
-                      Mark as
-                      <br />
-                      in stock
-                    </Typography>
-                  </Button>
-                </div>
-              </Typography>
-            </MissingProductCard>
-          ))}
+                </CategoryDisplay>
+              );
+            }
+          )}
       </Container>
     </>
   );
