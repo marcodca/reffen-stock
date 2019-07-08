@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { graphql, compose } from "react-apollo";
 import {
   getProductsQuery,
@@ -7,10 +7,13 @@ import {
 } from "../queries";
 import styled from "styled-components/macro";
 import media from "../styles/media";
+import { bars } from "../utlis";
 
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
+import Button from "@material-ui/core/Button";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 import { inStock } from "../styles/icons";
 
 const Container = styled.div`
@@ -30,8 +33,20 @@ const MissingProductCard = styled(Paper)`
 const MissingProductRecords = ({
   products: { products },
   missingProductRecords: { missingProductRecords },
-  deleteMissingProductRecord
+  deleteMissingProductRecord,
+  setOpenSnackbar
 }) => {
+  const [selectBar, setSelectBar] = useState("All bars");
+
+  //
+
+  const missingProductRecordsByBar =
+    selectBar === "All bars"
+      ? missingProductRecords
+      : missingProductRecords.filter(record => {
+          return record.product.availableInBars.includes(selectBar);
+        });
+
   const handleDeleteMissingProductRecord = id => {
     deleteMissingProductRecord({
       variables: {
@@ -39,16 +54,51 @@ const MissingProductRecords = ({
       },
       //refetch the get Missing Product Records query
       refetchQueries: [{ query: getMissingProductsRecordsQuery }]
-    });
+    }).then(
+      ({
+        data: { deleteMissingProductRecord: deleteMissingProductRecord }
+      }) => {
+        setOpenSnackbar({
+          value: true,
+          message: `${deleteMissingProductRecord.product.name} is in stock now`
+        });
+      }
+    );
   };
 
   return (
     <>
       <Container>
-        {missingProductRecords &&
-          missingProductRecords.map(missingProduct => (
+        <div
+          css={`
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+          `}
+        >
+          <Typography variant='button'>Show missing products for:</Typography>
+          <Select
+            css={`
+            margin-left: 0.75rem;
+            `}
+            value={selectBar}
+            onChange={event => {
+              setSelectBar(event.target.value);
+              return;
+            }}
+          >
+            <MenuItem value={"All bars"}>All bars</MenuItem>
+            {bars.map((bar, index) => (
+              <MenuItem key={index} value={bar}>
+                {bar}
+              </MenuItem>
+            ))}
+          </Select>
+        </div>
+
+        {missingProductRecordsByBar &&
+          missingProductRecordsByBar.map(missingProduct => (
             <MissingProductCard key={missingProduct.id}>
-              {/* {console.log(missingProduct)} */}
               <Typography variant="h6">
                 {missingProduct.product.name}
               </Typography>
@@ -83,7 +133,7 @@ const MissingProductRecords = ({
                       <b>Comment: </b> {missingProduct.comment}
                     </Typography>
                   )}
-                  <IconButton
+                  <Button
                     onClick={() => {
                       handleDeleteMissingProductRecord(missingProduct.id);
                     }}
@@ -94,9 +144,13 @@ const MissingProductRecords = ({
                       }
                     `}
                   >
-                    <img src={inStock} width={40} alt="in-stock icon"/>
-                    <Typography variant="button">Mark as<br/>in stock</Typography>
-                  </IconButton>
+                    <img src={inStock} width={40} alt="in-stock icon" />
+                    <Typography variant="button">
+                      Mark as
+                      <br />
+                      in stock
+                    </Typography>
+                  </Button>
                 </div>
               </Typography>
             </MissingProductCard>
