@@ -220,7 +220,7 @@ const AddMissingProductRecord = ({
       refetchQueries: [{ query: getMissingProductsRecordsQuery }]
     })
       .then( ({data : { addMissingProductRecord }}) => {
-        setOpenSnackbar({value : true, message : `${addMissingProductRecord.product.name} has successfully been reported missing`})
+        setOpenSnackbar({value : true, message : `${addMissingProductRecord.product.name} has been reported missing`})
       })
     //We clear the inputs and close, calling cancel functionality
     handleCancel();
