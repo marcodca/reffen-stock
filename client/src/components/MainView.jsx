@@ -184,7 +184,7 @@ const MainView = (props, context) => {
       </DrawerNav>
       {tabsValue === 0 && (
         <TabContainer>
-          <MissingProductRecords/>
+          <MissingProductRecords setOpenSnackbar={setOpenSnackbar} />
           <button onClick={handleClickOpen}>open</button>
           <Dialog fullScreen open={open}>
             <SlideIn>
