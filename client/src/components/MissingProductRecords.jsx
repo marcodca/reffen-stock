@@ -75,7 +75,6 @@ let latestBarValue;
 //When a missing product record is deleted (marked as in stock) the value of the selectBar gets set again to "all bars" check how to fix this with useEffect
 
 const MissingProductRecords = ({
-  products: { products },
   missingProductRecords: { missingProductRecords },
   deleteMissingProductRecord,
   setOpenSnackbar
