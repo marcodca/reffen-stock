@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { graphql, compose } from "react-apollo";
 import {
   getProductsQuery,
@@ -70,6 +70,8 @@ const CategoryDisplay = ({ category, children }) => {
   );
 };
 
+let latestBarValue;
+
 //When a missing product record is deleted (marked as in stock) the value of the selectBar gets set again to "all bars" check how to fix this with useEffect
 
 const MissingProductRecords = ({
@@ -78,8 +80,13 @@ const MissingProductRecords = ({
   deleteMissingProductRecord,
   setOpenSnackbar
 }) => {
-  const [selectBar, setSelectBar] = useState("All bars");
 
+
+  const [selectBar, setSelectBar] = useState( latestBarValue || "All bars");
+
+  useEffect(()=>{
+    latestBarValue = selectBar;
+  })
   //
   const MissingProductCard = ({ missingProduct }) => {
     const {
@@ -217,10 +224,10 @@ const MissingProductRecords = ({
               });
 
               return (
-                <CategoryDisplay category={productCat}>
+                <CategoryDisplay category={productCat} key={index}>
                   {missingProductRecordsByBarAndCategory[category].map(
-                    missingProduct => (
-                      <MissingProductCard missingProduct={missingProduct} />
+                    (missingProduct, index) => (
+                      <MissingProductCard missingProduct={missingProduct} key={index} />
                     )
                   )}
                 </CategoryDisplay>
