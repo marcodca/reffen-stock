@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { graphql, compose } from "react-apollo";
 import {
   getProductsQuery,
@@ -14,13 +14,14 @@ import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import Hidden from "@material-ui/core/Hidden";
 import { inStock } from "../styles/icons";
 
 const Container = styled.div`
   width: 100%;
   margin-top: 5.5rem;
   ${media.down.sm`
-    margin-top: 7.5rem;
+    margin-top: 6.5rem;
   `};
 `;
 
@@ -77,7 +78,7 @@ let latestBarValue;
 const MissingProductRecords = ({
   missingProductRecords: { missingProductRecords },
   deleteMissingProductRecord,
-  setOpenSnackbar
+  setOpenSnackbar, openDrawer
 }) => {
 
 
@@ -85,7 +86,7 @@ const MissingProductRecords = ({
 
   useEffect(()=>{
     latestBarValue = selectBar;
-  })
+  },[selectBar])
   //
   const MissingProductCard = ({ missingProduct }) => {
     const {
@@ -188,6 +189,25 @@ const MissingProductRecords = ({
   return (
     <>
       <Container>
+      <Hidden smUp implementation="css">
+        <div
+        css={`
+        display: flex;
+        justify-content: center;
+        `}
+        >
+          <Button
+            css={`
+            margin-bottom: 1rem;
+            background-color: lightblue;
+            padding: 9px 11px;
+            `}
+            onClick={openDrawer}
+          >
+            Report new missing product
+          </Button>
+        </div>
+        </Hidden>
         <div
           css={`
             display: flex;

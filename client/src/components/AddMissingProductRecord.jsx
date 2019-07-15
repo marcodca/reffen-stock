@@ -16,6 +16,7 @@ import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import Hidden from "@material-ui/core/Hidden";
 
 //Styled-Components
 
@@ -64,9 +65,9 @@ const ExclamationMarkIcon = styled.img`
 const CloseIcon = styled(closeIcon)`
   position: absolute;
   left: 85%;
-  bottom: 95%;
+  bottom: 92%;
   cursor: pointer;
-`
+`;
 
 //
 
@@ -218,10 +219,14 @@ const AddMissingProductRecord = ({
       },
       //refetch the get Missing Product Records query
       refetchQueries: [{ query: getMissingProductsRecordsQuery }]
-    })
-      .then( ({data : { addMissingProductRecord }}) => {
-        setOpenSnackbar({value : true, message : `${addMissingProductRecord.product.name} has been reported missing`})
-      })
+    }).then(({ data: { addMissingProductRecord } }) => {
+      setOpenSnackbar({
+        value: true,
+        message: `${
+          addMissingProductRecord.product.name
+        } has been reported missing`
+      });
+    });
     //We clear the inputs and close, calling cancel functionality
     handleCancel();
   };
@@ -285,12 +290,11 @@ const AddMissingProductRecord = ({
         css={`
           margin-top: 1em;
           width: 100%;
-          border : 1px solid lightgrey;
+          border: 1px solid lightgrey;
           border-radius: 5%;
           padding: 3%;
           margin-left: 0;
         `}
-        
         control={
           <Switch
             checked={isImportant}
@@ -299,29 +303,47 @@ const AddMissingProductRecord = ({
           />
         }
         label={IsImportantLabel}
-        
       />
-        <CloseIcon
-        onClick={handleCancel}
-        >
+      <Hidden smUp implementation="css">
+        <CloseIcon onClick={handleCancel}>
           <path
             xmlns="http://www.w3.org/2000/svg"
             d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
           />
         </CloseIcon>
+      </Hidden>
+
+      <Button
+        css={`
+          margin-top: 2em;
+          background-color: lightblue;
+        `}
+        disabled={selectInput ? false : true}
+        onClick={handleReportNewMissingProductRecord}
+        size="large"
+        fullWidth
+      >
+        Create new report
+      </Button>
+      <Button
+        onClick={openAddProductDialog}
+        css={`
+          margin-top: 4em;
+        `}
+        variant="text"
+      >
+        Create new product
+      </Button>
+      <Hidden mdDown implementation="css">
         <Button
+          onClick={handleCancel}
           css={`
-            margin-top: 2em;
-            background-color: lightblue;
+            background: lightgrey;
           `}
-          disabled={selectInput ? false : true}
-          onClick={handleReportNewMissingProductRecord}
-          size='large'
-          fullWidth
         >
-          Report new missing product
+          cancel
         </Button>
-      <Button onClick={openAddProductDialog} css={`margin-top: 4em;`} variant="text">Create new product</Button>
+      </Hidden>
     </Container>
   );
 };
