@@ -17,12 +17,13 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Box from "@material-ui/core/Box";
 import Hidden from "@material-ui/core/Hidden";
 import { inStock } from "../styles/icons";
+import { exclamationMark } from "../styles/icons";
 
 const Container = styled.div`
   width: 100%;
-  margin-top: 5.5rem;
+  margin-top: 4rem;
   ${media.down.sm`
-    margin-top: 6.5rem;
+    margin-top: 5.2rem;
   `};
 `;
 
@@ -36,8 +37,23 @@ const ImportantProductsDisplay = ({ products }) => {
   console.log(products);
 
   return (
-    <Box textAlign='center' css={`margin-top: 10px;`}>
-      <Typography> Highlight products:</Typography>
+    <Box
+      css={`
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      `}
+    >
+      <div
+        css={`
+          display: flex;
+        `}
+      >
+        <img width={24} src={exclamationMark} css={`margin-right: 4px;`}/>
+        <Typography variant='h6'> Highlights:</Typography>
+      </div>
+
       <div
         css={`
           display: flex;
@@ -49,11 +65,11 @@ const ImportantProductsDisplay = ({ products }) => {
       >
         {products.map(product => (
           <Box
-            fontSize={13}
+            fontSize={18}
             css={`
               padding: 5px;
               margin: 3px;
-              background: rgba(22, 53, 204, 0.15);
+              background: rgba(22, 53, 204, 0.25);
               border-radius: 4%;
             `}
           >
@@ -227,7 +243,6 @@ const MissingProductRecords = ({
   return (
     <>
       <Container>
-    
         <div
           css={`
             display: flex;
@@ -254,7 +269,7 @@ const MissingProductRecords = ({
             ))}
           </Select>
         </div>
-        
+
         {Boolean(importantProducts.length) && (
           <ImportantProductsDisplay products={importantProducts} />
         )}
@@ -280,7 +295,7 @@ const MissingProductRecords = ({
               );
             }
           )}
-              <Hidden smUp implementation="css">
+        <Hidden smUp implementation="css">
           <div
             css={`
               display: flex;
