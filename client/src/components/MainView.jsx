@@ -185,7 +185,6 @@ const MainView = (props, context) => {
       {tabsValue === 0 && (
         <TabContainer>
           <MissingProductRecords setOpenSnackbar={setOpenSnackbar} openDrawer={handleDrawerToggle}/>
-          <button onClick={handleClickOpen}>open</button>
           <Dialog fullScreen open={open}>
             <SlideIn>
               <AddProduct
@@ -194,16 +193,6 @@ const MainView = (props, context) => {
               />
             </SlideIn>
           </Dialog>
-          <Hidden smUp implementation="css">
-            <Button
-              color="primary"
-              aria-label="Open drawer"
-              edge="start"
-              onClick={handleDrawerToggle}
-            >
-              Open drawer
-            </Button>
-          </Hidden>
         </TabContainer>
       )}
       {tabsValue === 1 && <TabContainer>Page Two</TabContainer>}
