@@ -14,6 +14,7 @@ import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import Box from "@material-ui/core/Box";
 import Hidden from "@material-ui/core/Hidden";
 import { inStock } from "../styles/icons";
 
@@ -30,6 +31,39 @@ const StyledProductCard = styled(Paper)`
   padding: 3%;
   margin: 4% auto;
 `;
+
+const ImportantProductsDisplay = ({ products }) => {
+  console.log(products);
+
+  return (
+    <Box textAlign='center' css={`margin-top: 10px;`}>
+      <Typography> Highlight products:</Typography>
+      <div
+        css={`
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-wrap: wrap;
+          margin-top: 7px;
+        `}
+      >
+        {products.map(product => (
+          <Box
+            fontSize={13}
+            css={`
+              padding: 5px;
+              margin: 3px;
+              background: rgba(22, 53, 204, 0.15);
+              border-radius: 4%;
+            `}
+          >
+            {product.product.name}
+          </Box>
+        ))}
+      </div>
+    </Box>
+  );
+};
 
 const CategoryDisplay = ({ category, children }) => {
   const Line = () => (
@@ -71,22 +105,20 @@ const CategoryDisplay = ({ category, children }) => {
   );
 };
 
+//A reference outside the functional component that lets keep the track of the last bar that was selected
 let latestBarValue;
-
-//When a missing product record is deleted (marked as in stock) the value of the selectBar gets set again to "all bars" check how to fix this with useEffect
 
 const MissingProductRecords = ({
   missingProductRecords: { missingProductRecords },
   deleteMissingProductRecord,
-  setOpenSnackbar, openDrawer
+  setOpenSnackbar,
+  openDrawer
 }) => {
+  const [selectBar, setSelectBar] = useState(latestBarValue || "All bars");
 
-
-  const [selectBar, setSelectBar] = useState( latestBarValue || "All bars");
-
-  useEffect(()=>{
+  useEffect(() => {
     latestBarValue = selectBar;
-  },[selectBar])
+  }, [selectBar]);
   //
   const MissingProductCard = ({ missingProduct }) => {
     const {
@@ -163,6 +195,12 @@ const MissingProductRecords = ({
           return record.product.availableInBars.includes(selectBar);
         });
 
+  const importantProducts = missingProductRecordsByBar
+    ? Object.values(missingProductRecordsByBar).filter(
+        productRecord => productRecord.markedAsImportant
+      )
+    : [];
+
   const missingProductRecordsByBarAndCategory = missingProductRecordsByBar
     ? missingProductRecordsByBar.reduce((acc, elem) => {
         if (!(elem.product.category in acc)) acc[elem.product.category] = [];
@@ -189,25 +227,7 @@ const MissingProductRecords = ({
   return (
     <>
       <Container>
-      <Hidden smUp implementation="css">
-        <div
-        css={`
-        display: flex;
-        justify-content: center;
-        `}
-        >
-          <Button
-            css={`
-            margin-bottom: 1rem;
-            background-color: lightblue;
-            padding: 9px 11px;
-            `}
-            onClick={openDrawer}
-          >
-            Report new missing product
-          </Button>
-        </div>
-        </Hidden>
+    
         <div
           css={`
             display: flex;
@@ -234,6 +254,10 @@ const MissingProductRecords = ({
             ))}
           </Select>
         </div>
+        
+        {Boolean(importantProducts.length) && (
+          <ImportantProductsDisplay products={importantProducts} />
+        )}
 
         {missingProductRecordsByBarAndCategory &&
           Object.keys(missingProductRecordsByBarAndCategory).map(
@@ -246,13 +270,35 @@ const MissingProductRecords = ({
                 <CategoryDisplay category={productCat} key={index}>
                   {missingProductRecordsByBarAndCategory[category].map(
                     (missingProduct, index) => (
-                      <MissingProductCard missingProduct={missingProduct} key={index} />
+                      <MissingProductCard
+                        missingProduct={missingProduct}
+                        key={index}
+                      />
                     )
                   )}
                 </CategoryDisplay>
               );
             }
           )}
+              <Hidden smUp implementation="css">
+          <div
+            css={`
+              display: flex;
+              justify-content: center;
+            `}
+          >
+            <Button
+              css={`
+                margin-bottom: 1rem;
+                background-color: lightblue;
+                padding: 9px 11px;
+              `}
+              onClick={openDrawer}
+            >
+              Report new missing product
+            </Button>
+          </div>
+        </Hidden>
       </Container>
     </>
   );
