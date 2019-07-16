@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import MissingProductRecords from "./MissingProductRecords";
+import { Offline, Online } from "react-detect-offline";
 import AddProduct from "./AddProduct";
 import AddMissingProductRecord from "./AddMissingProductRecord";
 
@@ -9,6 +10,7 @@ import { SlideIn, SlideInBlurred } from "../styles/animations";
 import { logoIcon } from "../styles/icons";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CloseIcon from "@material-ui/icons/Close";
+import SignalWifiOff from "@material-ui/icons/SignalWifiOff";
 import IconButton from "@material-ui/core/IconButton";
 
 import Dialog from "@material-ui/core/Dialog";
@@ -20,10 +22,10 @@ import Tab from "@material-ui/core/Tab";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
-import Button from "@material-ui/core/Button";
 
 import Snackbar from "@material-ui/core/Snackbar";
 import SnackbarContent from "@material-ui/core/SnackbarContent";
+import { Typography } from "@material-ui/core";
 
 const MainView = (props, context) => {
   //Create product dialog
@@ -125,6 +127,8 @@ const MainView = (props, context) => {
   }
 
   return (
+    <>
+      <Online>
     <Container>
       <CssBaseline />
       <AppBar position="fixed">
@@ -142,6 +146,7 @@ const MainView = (props, context) => {
           <LinkTab label="Cocktail counter" />
         </Tabs>
       </AppBar>
+      
       {
         //Mobile
       }
@@ -247,6 +252,20 @@ const MainView = (props, context) => {
         />
       </Snackbar>
     </Container>
+    </Online>
+    <Offline>
+      <div
+        css={`
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        `}
+      >
+      <SignalWifiOff css={`font-size:15rem;`}/>
+      <Typography align='center' css={`font-size: 16em;`}>You seem to be offline, try again later.</Typography>
+      </div>
+    </Offline>
+    </>
   );
 };
 export default MainView;

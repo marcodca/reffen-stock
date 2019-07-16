@@ -1,29 +1,24 @@
-import React, { useState, useEffect } from "react";
-import { graphql, compose } from "react-apollo";
-import {
-  getProductsQuery,
-  getMissingProductsRecordsQuery,
-  deleteMissingProductRecord
-} from "../queries";
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
+import Hidden from "@material-ui/core/Hidden";
+import MenuItem from "@material-ui/core/MenuItem";
+import Paper from "@material-ui/core/Paper";
+import Select from "@material-ui/core/Select";
+import Typography from "@material-ui/core/Typography";
+import React, { useEffect, useState } from "react";
+import { compose, graphql } from "react-apollo";
 import styled from "styled-components/macro";
+import { deleteMissingProductRecord, getMissingProductsRecordsQuery, getProductsQuery } from "../queries";
+import { exclamationMark, inStock } from "../styles/icons";
 import media from "../styles/media";
 import { bars, categories } from "../utlis";
 
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
-import Button from "@material-ui/core/Button";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import Box from "@material-ui/core/Box";
-import Hidden from "@material-ui/core/Hidden";
-import { inStock } from "../styles/icons";
-import { exclamationMark } from "../styles/icons";
 
 const Container = styled.div`
   width: 100%;
   margin-top: 4rem;
   ${media.down.sm`
-    margin-top: 5.2rem;
+    margin-top: 5.8rem;
   `};
 `;
 

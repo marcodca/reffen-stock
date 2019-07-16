@@ -18,6 +18,7 @@
     "express-graphql": "^0.8.0",
     "graphql": "^14.3.0",
     "mongoose": "^5.5.11",
+    "react-detect-offline": "^2.4.0",
     "react-select": "^3.0.4"
   },
   "engines": {
