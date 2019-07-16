@@ -49,7 +49,7 @@ const MainView = (props, context) => {
   const TabContainer = styled.div`
     padding: 24;
     width: 100%;
-  `
+  `;
 
   const LinkTab = props => (
     <Tab
@@ -129,144 +129,158 @@ const MainView = (props, context) => {
   return (
     <>
       <Online>
-    <Container>
       <CssBaseline />
-      <AppBar position="fixed">
-        <img
-          css={`
-            margin: 1% auto 0 auto;
-            align-self: baseline;
-          `}
-          width={85}
-          src={logoIcon}
-          alt=""
-        />
-        <Tabs variant="fullWidth" value={tabsValue} onChange={handleChange}>
-          <LinkTab label="Out of stock" />
-          <LinkTab label="Cocktail counter" />
-        </Tabs>
-      </AppBar>
-      
-      {
-        //Mobile
-      }
-      <DrawerNav aria-label="Report new missing product">
-        <Hidden smUp implementation="css">
-          <Drawer
-            container={container}
-            variant="temporary"
-            anchor={"left"}
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            ModalProps={{
-              keepMounted: true // Better open performance on mobile.
-            }}
-          >
-            <SlideInBlurred>
-              <AddMissingProductRecord
-                onClose={handleDrawerToggle}
-                openAddProductDialog={handleClickOpen}
-                setOpenSnackbar={setOpenSnackbar}
-              />
-            </SlideInBlurred>
-          </Drawer>
-        </Hidden>
-        {
-          //Desktop
-        }
-        <Hidden xsDown implementation="css">
-          <Drawer
-            variant="persistent" //middle way between permanent and temporary
-            open={tabsValue === 0}
-            anchor={"left"}
-          >
-            <AddMissingProductRecord
-              openAddProductDialog={handleClickOpen}
-              setOpenSnackbar={setOpenSnackbar}
-            />
-          </Drawer>
-        </Hidden>
-      </DrawerNav>
-      {tabsValue === 0 && (
-        <TabContainer>
-          <MissingProductRecords setOpenSnackbar={setOpenSnackbar} openDrawer={handleDrawerToggle}/>
-          <Dialog fullScreen open={open}>
-            <SlideIn>
-              <AddProduct
-                onClose={handleClose}
-                setOpenSnackbar={setOpenSnackbar}
-              />
-            </SlideIn>
-          </Dialog>
-        </TabContainer>
-      )}
-      {tabsValue === 1 && <TabContainer>Page Two</TabContainer>}
-      <Snackbar
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right"
-        }}
-        open={openSnackbar.value}
-        autoHideDuration={5000}
-        onClose={handleCloseSnackbar}
-      >
-        <SnackbarContent
-          css={`
-            background-color: green;
-            display: inline-flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: nowrap;
-            div {
-              margin: 0 !important;
-            }
-          `}
-          message={
-            <span
-              id="message-id"
+        <Container>
+          <AppBar position="fixed">
+            <img
               css={`
-                display: inline-flex;
-                align-items: center;
+                margin: 1% auto 0 auto;
+                align-self: baseline;
               `}
-            >
-              <CheckCircleIcon />
-              <span
-                css={`
-                  margin-left: 25%;
-                `}
-              >
-                {openSnackbar.message}
-              </span>
-            </span>
+              width={85}
+              src={logoIcon}
+              alt=""
+            />
+            <Tabs variant="fullWidth" value={tabsValue} onChange={handleChange}>
+              <LinkTab label="Out of stock" />
+              <LinkTab label="Cocktail counter" />
+            </Tabs>
+          </AppBar>
+
+          {
+            //Mobile
           }
-          action={[
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              onClick={handleCloseSnackbar}
-            >
-              <CloseIcon />
-            </IconButton>
-          ]}
-        />
-      </Snackbar>
-    </Container>
-    </Online>
-    <Offline>
-      <div
-        css={`
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          background-color: lightblue;
-          height: 100vh;
-        `}
+          <DrawerNav aria-label="Report new missing product">
+            <Hidden smUp implementation="css">
+              <Drawer
+                container={container}
+                variant="temporary"
+                anchor={"left"}
+                open={mobileOpen}
+                onClose={handleDrawerToggle}
+                ModalProps={{
+                  keepMounted: true // Better open performance on mobile.
+                }}
+              >
+                <SlideInBlurred>
+                  <AddMissingProductRecord
+                    onClose={handleDrawerToggle}
+                    openAddProductDialog={handleClickOpen}
+                    setOpenSnackbar={setOpenSnackbar}
+                  />
+                </SlideInBlurred>
+              </Drawer>
+            </Hidden>
+            {
+              //Desktop
+            }
+            <Hidden xsDown implementation="css">
+              <Drawer
+                variant="persistent" //middle way between permanent and temporary
+                open={tabsValue === 0}
+                anchor={"left"}
+              >
+                <AddMissingProductRecord
+                  openAddProductDialog={handleClickOpen}
+                  setOpenSnackbar={setOpenSnackbar}
+                />
+              </Drawer>
+            </Hidden>
+          </DrawerNav>
+          {tabsValue === 0 && (
+            <TabContainer>
+              <MissingProductRecords
+                setOpenSnackbar={setOpenSnackbar}
+                openDrawer={handleDrawerToggle}
+              />
+              <Dialog fullScreen open={open}>
+                <SlideIn>
+                  <AddProduct
+                    onClose={handleClose}
+                    setOpenSnackbar={setOpenSnackbar}
+                  />
+                </SlideIn>
+              </Dialog>
+            </TabContainer>
+          )}
+          {tabsValue === 1 && <TabContainer>Page Two</TabContainer>}
+          <Snackbar
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right"
+            }}
+            open={openSnackbar.value}
+            autoHideDuration={5000}
+            onClose={handleCloseSnackbar}
+          >
+            <SnackbarContent
+              css={`
+                background-color: green;
+                display: inline-flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: nowrap;
+                div {
+                  margin: 0 !important;
+                }
+              `}
+              message={
+                <span
+                  id="message-id"
+                  css={`
+                    display: inline-flex;
+                    align-items: center;
+                  `}
+                >
+                  <CheckCircleIcon />
+                  <span
+                    css={`
+                      margin-left: 25%;
+                    `}
+                  >
+                    {openSnackbar.message}
+                  </span>
+                </span>
+              }
+              action={[
+                <IconButton
+                  key="close"
+                  aria-label="Close"
+                  color="inherit"
+                  onClick={handleCloseSnackbar}
+                >
+                  <CloseIcon />
+                </IconButton>
+              ]}
+            />
+          </Snackbar>
+        </Container>
+      </Online>
+      <Offline
       >
-      <SignalWifiOff css={`font-size:12rem;`}/>
-      <Typography align='center' css={`font-size: 3rem;`}>You seem to be offline, try again later...</Typography>
-      </div>
-    </Offline>
+        <div
+          css={`
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          `}
+        >
+          <SignalWifiOff
+            css={`
+              font-size: 60px;
+            `}
+          />
+          <Typography
+            align="center"
+            css={`
+              font-size: 35px;
+            `}
+          >
+            You seem to be offline, try again later...
+          </Typography>
+        </div>
+      </Offline>
     </>
   );
 };
