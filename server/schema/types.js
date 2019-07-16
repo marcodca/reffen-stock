@@ -36,4 +36,15 @@ const ProductType = new GraphQLObjectType({
     })
   });
 
-  module.exports = { ProductType, MissingProductRecordType };
+  const CocktailsType = new GraphQLObjectType({
+    name: "Cocktails",
+    fields: () => ({
+      id: { type: GraphQLID },
+      counter: { type: GraphQLString },
+      lastModified: { type: GraphQLString }
+    })
+  });
+
+
+
+  module.exports = { ProductType, MissingProductRecordType, CocktailsType };
