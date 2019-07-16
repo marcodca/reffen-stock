@@ -259,10 +259,12 @@ const MainView = (props, context) => {
           display: flex;
           flex-direction: column;
           align-items: center;
+          background-color: lightblue;
+          height: 100vh;
         `}
       >
-      <SignalWifiOff css={`font-size:15rem;`}/>
-      <Typography align='center' css={`font-size: 16em;`}>You seem to be offline, try again later.</Typography>
+      <SignalWifiOff css={`font-size:12rem;`}/>
+      <Typography align='center' css={`font-size: 3rem;`}>You seem to be offline, try again later...</Typography>
       </div>
     </Offline>
     </>

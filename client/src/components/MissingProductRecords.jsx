@@ -29,7 +29,6 @@ const StyledProductCard = styled(Paper)`
 `;
 
 const ImportantProductsDisplay = ({ products }) => {
-  console.log(products);
 
   return (
     <Box
@@ -45,7 +44,7 @@ const ImportantProductsDisplay = ({ products }) => {
           display: flex;
         `}
       >
-        <img width={24} src={exclamationMark} css={`margin-right: 4px;`}/>
+        <img width={24} src={exclamationMark} alt="" css={`margin-right: 4px;`}/>
         <Typography variant='h6'> Highlights:</Typography>
       </div>
 
@@ -60,6 +59,7 @@ const ImportantProductsDisplay = ({ products }) => {
       >
         {products.map(product => (
           <Box
+            key={product.id}
             fontSize={18}
             css={`
               padding: 5px;
