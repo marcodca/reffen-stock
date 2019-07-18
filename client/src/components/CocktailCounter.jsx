@@ -46,6 +46,8 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
 
   const newCocktailsCounter = { ...counter };
 
+  console.log(JSON.stringify(newCocktailsCounter) === JSON.stringify(lastCount))
+
   const CocktailWidget = ({ cocktail, count }) => {
     return (
       <>
@@ -97,6 +99,7 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
       })}
 
       <button
+        disabled={JSON.stringify(newCocktailsCounter) === JSON.stringify(lastCount)}
         onClick={() => {
           addCocktailsRecord({
             variables: { counter: JSON.stringify(counter), lastModified: moment() }
