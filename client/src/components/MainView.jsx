@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import MissingProductRecords from "./MissingProductRecords";
-import { Offline, Online } from "react-detect-offline";
 import AddProduct from "./AddProduct";
 import AddMissingProductRecord from "./AddMissingProductRecord";
+import CocktailCounter from "./CocktailCounter";
 
+import { Offline, Online } from "react-detect-offline";
 import styled, { css } from "styled-components/macro";
+
 import media from "../styles/media";
 import { SlideIn, SlideInBlurred } from "../styles/animations";
 import { logoIcon } from "../styles/icons";
@@ -12,9 +14,7 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CloseIcon from "@material-ui/icons/Close";
 import SignalWifiOff from "@material-ui/icons/SignalWifiOff";
 import IconButton from "@material-ui/core/IconButton";
-
 import Dialog from "@material-ui/core/Dialog";
-
 import appBar from "@material-ui/core/AppBar";
 import tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -40,7 +40,8 @@ const MainView = (props, context) => {
   };
 
   //Tabs
-  const [tabsValue, setTabsValue] = useState(0);
+  //Change it back to 0!
+  const [tabsValue, setTabsValue] = useState(1);
 
   const handleChange = (event, newValue) => {
     setTabsValue(newValue);
@@ -203,7 +204,10 @@ const MainView = (props, context) => {
               </Dialog>
             </TabContainer>
           )}
-          {tabsValue === 1 && <TabContainer>Page Two</TabContainer>}
+          {tabsValue === 1 && 
+          <TabContainer>
+            <CocktailCounter/>  
+          </TabContainer>}
           <Snackbar
             anchorOrigin={{
               vertical: "bottom",

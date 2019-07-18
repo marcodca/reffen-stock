@@ -13,7 +13,6 @@ import { exclamationMark, inStock } from "../styles/icons";
 import media from "../styles/media";
 import { bars, categories } from "../utlis";
 
-
 const Container = styled.div`
   width: 100%;
   margin-top: 4rem;

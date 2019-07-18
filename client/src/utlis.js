@@ -1,4 +1,18 @@
-import { beerBottle, beerPremiumBottle, beerKeg, softDrink, juice, cocktail, syrop, fruit, wine, spirit, cleaning, barSupply, other  } from "./styles/icons";
+import {
+  beerBottle,
+  beerPremiumBottle,
+  beerKeg,
+  softDrink,
+  juice,
+  cocktail,
+  syrop,
+  fruit,
+  wine,
+  spirit,
+  cleaning,
+  barSupply,
+  other
+} from "./styles/icons";
 
 export const categories = [
   { label: "Beer bottles", icon: beerBottle },
@@ -12,8 +26,8 @@ export const categories = [
   { label: "Wines/Sparklings", icon: wine },
   { label: "Spirits", icon: spirit },
   { label: "Cleaning", icon: cleaning },
-  { label: "Bar supplies" , icon: barSupply },
-  { label: "Others" , icon: other },
+  { label: "Bar supplies", icon: barSupply },
+  { label: "Others", icon: other }
 ];
 
 export const bars = [
@@ -26,3 +40,13 @@ export const bars = [
   "Bling-bling",
   "Bang-truck"
 ];
+
+export const cocktails = [
+  "Aperol",
+  "Mojito",
+  "Daquiri",
+  "Sangria",
+  "Elderflower",
+  "Basil"
+];
+

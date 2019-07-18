@@ -74,13 +74,33 @@ export const addMissingProductRecordMutation = gql`
 `;
 
 export const deleteMissingProductRecord = gql`
-mutation($missingProductRecordId: ID!) {
-  deleteMissingProductRecord(id: $missingProductRecordId){
-    id
-    product{
+  mutation($missingProductRecordId: ID!) {
+    deleteMissingProductRecord(id: $missingProductRecordId) {
       id
-      name
+      product {
+        id
+        name
+      }
     }
   }
-}
+`;
+
+export const getCocktailsCounter = gql`
+  {
+    cocktailsCounter {
+      id
+      counter
+      lastModified
+    }
+  }
+`;
+
+export const addCocktailsRecord = gql`
+  mutation($counter: String!, $lastModified: String!) {
+    addCocktailsRecord(counter: $counter, lastModified: $lastModified) {
+      id
+      counter
+      lastModified
+    }
+  }
 `;
