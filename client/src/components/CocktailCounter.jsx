@@ -21,7 +21,7 @@ const Container = styled.div`
 //   InitialCocktailsCounter[cocktail] = 0;
 // });
 
-let prevCount;
+let prevCount, prevModified;
 
 const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
 
@@ -43,9 +43,7 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
 
   useEffect(() => {
     setCounter(prevCount || lastCount);
-    setUpdated(lastModified);
-    console.log('effect')
-    // console.log(lastCount)
+    setUpdated(prevModified || lastModified);
 // eslint-disable-next-line
   }, [getCocktailsCounter]);
 
@@ -91,7 +89,10 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
     return;
   }
 
-  // console.log(counter);
+const hasCounterChanged = prevCount
+  ? JSON.stringify(counter) === JSON.stringify(prevCount)
+  : JSON.stringify(counter) === JSON.stringify(lastCount);
+  
   return (
     <Container>
         <p>Updated {moment(updated).fromNow()}.</p>
@@ -102,16 +103,17 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
       })}
 
       <button
-        disabled={JSON.stringify(newCocktailsCounter) === JSON.stringify(lastCount)}
+        disabled={hasCounterChanged} 
         onClick={() => {
           addCocktailsRecord({
             variables: { counter: JSON.stringify(counter), lastModified: moment() }
           })
           .then(({data}) => {
               const { addCocktailsRecord : newRecord } = data;
+              prevCount = JSON.parse(newRecord.counter);
+              prevModified = newRecord.lastModified;
               setCounter(JSON.parse(newRecord.counter));
               setUpdated(newRecord.lastModified);
-              prevCount = JSON.parse(newRecord.counter);
           })
         }}
       >
