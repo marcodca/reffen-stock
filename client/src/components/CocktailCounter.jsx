@@ -21,6 +21,8 @@ const Container = styled.div`
 //   InitialCocktailsCounter[cocktail] = 0;
 // });
 
+let prevCount;
+
 const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
 
   const { cocktailsCounter, loading } = getCocktailsCounter;
@@ -29,7 +31,7 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
   ? cocktailsCounter[cocktailsCounter.length - 1]
   : { counter: "{}" };
 
-  console.log(lastRecord);
+  // console.log(lastRecord);
   
   const lastCount = JSON.parse(lastRecord.counter)
 
@@ -40,13 +42,14 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
   const [ updated, setUpdated ] = useState(lastModified);
 
   useEffect(() => {
-    setCounter(lastCount);
+    setCounter(prevCount || lastCount);
     setUpdated(lastModified);
+    console.log('effect')
+    // console.log(lastCount)
+// eslint-disable-next-line
   }, [getCocktailsCounter]);
 
   const newCocktailsCounter = { ...counter };
-
-  console.log(JSON.stringify(newCocktailsCounter) === JSON.stringify(lastCount))
 
   const CocktailWidget = ({ cocktail, count }) => {
     return (
@@ -88,7 +91,7 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
     return;
   }
 
-  console.log(counter);
+  // console.log(counter);
   return (
     <Container>
         <p>Updated {moment(updated).fromNow()}.</p>
@@ -108,6 +111,7 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
               const { addCocktailsRecord : newRecord } = data;
               setCounter(JSON.parse(newRecord.counter));
               setUpdated(newRecord.lastModified);
+              prevCount = JSON.parse(newRecord.counter);
           })
         }}
       >
