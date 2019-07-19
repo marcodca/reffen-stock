@@ -1,7 +1,7 @@
 const graphql = require("graphql");
 const Product = require("../models/product");
 const MissingProductRecord = require("../models/missingProductRecord");
-const Cocktails = require("../models/Cocktails");
+const Cocktails = require("../models/cocktails");
 const {
   ProductType,
   MissingProductRecordType,
