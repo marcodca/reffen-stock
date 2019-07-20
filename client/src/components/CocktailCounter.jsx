@@ -122,6 +122,7 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
   };
 
   function increaseCocktailsCounter(cocktail, amount = 1) {
+    if (!cocktail) return
     const newCount = { ...counter };
     newCount[cocktail] = newCount[cocktail] + amount;
     setCounter(newCount);
@@ -129,6 +130,7 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
   }
 
   function decreaseCocktailsCounter(cocktail, amount = 1) {
+    if (!cocktail) return
     const newCount = { ...counter };
     newCount[cocktail] = newCount[cocktail] - amount;
     setCounter(newCount);
