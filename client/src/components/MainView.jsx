@@ -102,6 +102,7 @@ const MainView = (props, context) => {
   const DrawerNav = styled.nav`
     ${media.up.sm`width : ${drawerWidth}px;`}
     flex-shrink: 0;
+    ${()=> tabsValue === 1 ? `display: none` : ""};
   `;
 
   const Drawer = styled(drawer)`
