@@ -4,7 +4,11 @@ import media from "../styles/media";
 import { compose, graphql } from "react-apollo";
 import { getCocktailsCounter, addCocktailsRecord } from "../queries";
 import { cocktails } from "../utlis";
-import moment from 'moment';
+import moment from "moment";
+
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+import Fab from "@material-ui/core/Fab";
 
 const Container = styled.div`
   width: 100%;
@@ -12,6 +16,9 @@ const Container = styled.div`
   ${media.down.sm`
     margin-top: 5.8rem;
   `}
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 // first time ever counter
@@ -24,54 +31,93 @@ const Container = styled.div`
 let prevCount, prevModified;
 
 const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
-
   const { cocktailsCounter, loading } = getCocktailsCounter;
 
   const lastRecord = cocktailsCounter
-  ? cocktailsCounter[cocktailsCounter.length - 1]
-  : { counter: "{}" };
+    ? cocktailsCounter[cocktailsCounter.length - 1]
+    : { counter: "{}" };
 
   // console.log(lastRecord);
-  
-  const lastCount = JSON.parse(lastRecord.counter)
+
+  const lastCount = JSON.parse(lastRecord.counter);
 
   const { lastModified } = lastRecord;
 
-
   const [counter, setCounter] = useState(lastCount);
-  const [ updated, setUpdated ] = useState(lastModified);
+  const [updated, setUpdated] = useState(lastModified);
 
   useEffect(() => {
     setCounter(prevCount || lastCount);
     setUpdated(prevModified || lastModified);
-// eslint-disable-next-line
+    // eslint-disable-next-line
   }, [getCocktailsCounter]);
 
   const newCocktailsCounter = { ...counter };
 
   const CocktailWidget = ({ cocktail, count }) => {
     return (
-      <>
-        <button
-          value={cocktail}
-          onClick={e => {
-            decreaseCocktailsCounter(e.target.value);
-          }}
-        >
-          {cocktail}-1
-        </button>
-        <p>
-          {cocktail} : {count}
-        </p>
-        <button
-          value={cocktail}
-          onClick={e => {
-            increaseCocktailsCounter(e.target.value);
-          }}
-        >
-          {cocktail}+1
-        </button>
-      </>
+      <Paper
+        css={`
+          width: 60%;
+          height: 5rem;
+          min-width: 280px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        `}
+      >
+        <div>
+          <Fab
+            color="secondary"
+            aria-label={`Delete 1 ${cocktail}`}
+            value={cocktail}
+            onClick={e => {
+              decreaseCocktailsCounter(e.target.parentElement.value);
+            }}
+          >
+            -1
+          </Fab>
+          <Fab
+            color="secondary"
+            aria-label={`Delete 0.25 ${cocktail}`}
+            value={cocktail}
+            size='small'
+            onClick={e => {
+              decreaseCocktailsCounter(e.target.parentElement.value, 0.25);
+            }}
+          >
+            -0.25
+          </Fab>
+        </div>
+        <div>
+          <Typography variant="h6" align="center">
+            {cocktail} <br /> {count}
+          </Typography>
+        </div>
+        <div>
+        <Fab
+            color="primary"
+            size="small"
+            aria-label={`Add 0.25 ${cocktail}`}
+            value={cocktail}
+            onClick={e => {
+              increaseCocktailsCounter(e.target.parentElement.value, 0.25);
+            }}
+          >
+            +0.25
+          </Fab>
+          <Fab
+            color="primary"
+            aria-label={`Add 1 ${cocktail}`}
+            value={cocktail}
+            onClick={e => {
+              increaseCocktailsCounter(e.target.parentElement.value);
+            }}
+          >
+            +1
+          </Fab>
+        </div>
+      </Paper>
     );
   };
 
@@ -89,32 +135,36 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
     return;
   }
 
-const hasCounterChanged = prevCount
-  ? JSON.stringify(counter) === JSON.stringify(prevCount)
-  : JSON.stringify(counter) === JSON.stringify(lastCount);
-  
+  const hasCounterChanged = prevCount
+    ? JSON.stringify(counter) === JSON.stringify(prevCount)
+    : JSON.stringify(counter) === JSON.stringify(lastCount);
+
   return (
     <Container>
-        <p>Updated {moment(updated).fromNow()}.</p>
+      <p>Updated {moment(updated).fromNow()}.</p>
       {Object.entries(counter).map(([key, value], index) => {
-        return loading
-            ? <h1>Loading...</h1>
-            :<CocktailWidget cocktail={key} count={value} key={index} />;
+        return loading ? (
+          <h1>Loading...</h1>
+        ) : (
+          <CocktailWidget cocktail={key} count={value} key={index} />
+        );
       })}
 
       <button
-        disabled={hasCounterChanged} 
+        disabled={hasCounterChanged}
         onClick={() => {
           addCocktailsRecord({
-            variables: { counter: JSON.stringify(counter), lastModified: moment() }
-          })
-          .then(({data}) => {
-              const { addCocktailsRecord : newRecord } = data;
-              prevCount = JSON.parse(newRecord.counter);
-              prevModified = newRecord.lastModified;
-              setCounter(JSON.parse(newRecord.counter));
-              setUpdated(newRecord.lastModified);
-          })
+            variables: {
+              counter: JSON.stringify(counter),
+              lastModified: moment()
+            }
+          }).then(({ data }) => {
+            const { addCocktailsRecord: newRecord } = data;
+            prevCount = JSON.parse(newRecord.counter);
+            prevModified = newRecord.lastModified;
+            setCounter(JSON.parse(newRecord.counter));
+            setUpdated(newRecord.lastModified);
+          });
         }}
       >
         Save
