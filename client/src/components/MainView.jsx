@@ -40,8 +40,7 @@ const MainView = (props, context) => {
   };
 
   //Tabs
-  //Change it back to 0!
-  const [tabsValue, setTabsValue] = useState(1);
+  const [tabsValue, setTabsValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setTabsValue(newValue);
