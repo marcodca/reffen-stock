@@ -9,6 +9,8 @@ import moment from "moment";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Fab from "@material-ui/core/Fab";
+import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const Container = styled.div`
   width: 100%;
@@ -21,23 +23,18 @@ const Container = styled.div`
   align-items: center;
 `;
 
-// first time ever counter
-// const InitialCocktailsCounter = {};
-
-// cocktails.forEach(cocktail => {
-//   InitialCocktailsCounter[cocktail] = 0;
-// });
-
 let prevCount, prevModified;
 
 const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
-  const { cocktailsCounter, loading } = getCocktailsCounter;
+  const { cocktailsCounter } = getCocktailsCounter;
+
+  let loading = cocktailsCounter ? false : true;
+
+  console.log("loading", loading);
 
   const lastRecord = cocktailsCounter
     ? cocktailsCounter[cocktailsCounter.length - 1]
     : { counter: "{}" };
-
-  // console.log(lastRecord);
 
   const lastCount = JSON.parse(lastRecord.counter);
 
@@ -54,16 +51,39 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
 
   const newCocktailsCounter = { ...counter };
 
+  const lastReference = prevCount ? prevCount : lastCount;
+  const hasCounterChanged =
+    JSON.stringify(counter) === JSON.stringify(lastReference);
+
+  //Styled components
+  const CounterDisplay = styled(Typography)`
+    font-size: 1.5em;
+    color: ${props => (props.counter < 1 ? `red` : `inherit`)};
+  `;
+
+  const CocktailDisplay = styled(Typography)`
+    font-size: 1.3em;
+    color: ${props =>
+      props.lastreference[props.cocktail] === props.counter[props.cocktail]
+        ? `inherit`
+        : props.lastreference[props.cocktail] > props.counter[props.cocktail]
+        ? `red`
+        : `green`};
+  `;
+
+  //Components
+
   const CocktailWidget = ({ cocktail, count }) => {
     return (
       <Paper
         css={`
-          width: 60%;
+          width: 70%;
           height: 5rem;
-          min-width: 280px;
+          min-width: 320px;
           display: flex;
           justify-content: space-between;
           align-items: center;
+          ${media.up.sm`justify-content: space-around`};
         `}
       >
         <div>
@@ -74,6 +94,11 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
             onClick={e => {
               decreaseCocktailsCounter(e.target.parentElement.value);
             }}
+            css={`
+              width: 4.1em;
+              height: 4.1em;
+              margin: -4px 4px 4px 4px;
+            `}
           >
             -1
           </Fab>
@@ -81,21 +106,40 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
             color="secondary"
             aria-label={`Delete 0.25 ${cocktail}`}
             value={cocktail}
-            size='small'
+            size="small"
             onClick={e => {
               decreaseCocktailsCounter(e.target.parentElement.value, 0.25);
             }}
+            css={`
+              margin: 4px 4px -6px 0;
+            `}
           >
             -0.25
           </Fab>
         </div>
-        <div>
-          <Typography variant="h6" align="center">
-            {cocktail} <br /> {count}
-          </Typography>
+        <div
+          css={`
+            min-width: 100px;
+            font-size: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            ${media.down.sm`font-size: 14px`};
+          `}
+        >
+          <CocktailDisplay
+            lastreference={lastReference}
+            cocktail={cocktail}
+            counter={counter}
+          >
+            {cocktail}
+          </CocktailDisplay>
+          <CounterDisplay counter={count} cocktail={cocktail}>
+            {count}
+          </CounterDisplay>
         </div>
         <div>
-        <Fab
+          <Fab
             color="primary"
             size="small"
             aria-label={`Add 0.25 ${cocktail}`}
@@ -103,6 +147,9 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
             onClick={e => {
               increaseCocktailsCounter(e.target.parentElement.value, 0.25);
             }}
+            css={`
+              margin: 4px 0 -6px 4px;
+            `}
           >
             +0.25
           </Fab>
@@ -113,6 +160,9 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
             onClick={e => {
               increaseCocktailsCounter(e.target.parentElement.value);
             }}
+            css={`
+              margin: -6px 4px 0 4px;
+            `}
           >
             +1
           </Fab>
@@ -122,7 +172,7 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
   };
 
   function increaseCocktailsCounter(cocktail, amount = 1) {
-    if (!cocktail) return
+    if (!cocktail) return;
     const newCount = { ...counter };
     newCount[cocktail] = newCount[cocktail] + amount;
     setCounter(newCount);
@@ -130,47 +180,67 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
   }
 
   function decreaseCocktailsCounter(cocktail, amount = 1) {
-    if (!cocktail) return
+    if (!cocktail) return;
     const newCount = { ...counter };
     newCount[cocktail] = newCount[cocktail] - amount;
     setCounter(newCount);
     return;
   }
 
-  const hasCounterChanged = prevCount
-    ? JSON.stringify(counter) === JSON.stringify(prevCount)
-    : JSON.stringify(counter) === JSON.stringify(lastCount);
-
   return (
     <Container>
-      <p>Updated {moment(updated).fromNow()}.</p>
-      {Object.entries(counter).map(([key, value], index) => {
-        return loading ? (
-          <h1>Loading...</h1>
-        ) : (
-          <CocktailWidget cocktail={key} count={value} key={index} />
-        );
-      })}
-
-      <button
-        disabled={hasCounterChanged}
-        onClick={() => {
-          addCocktailsRecord({
-            variables: {
-              counter: JSON.stringify(counter),
-              lastModified: moment()
-            }
-          }).then(({ data }) => {
-            const { addCocktailsRecord: newRecord } = data;
-            prevCount = JSON.parse(newRecord.counter);
-            prevModified = newRecord.lastModified;
-            setCounter(JSON.parse(newRecord.counter));
-            setUpdated(newRecord.lastModified);
-          });
-        }}
-      >
-        Save
-      </button>
+      {loading ? (
+        <CircularProgress css={`
+        margin-top: 35vh;
+        `}/>
+      ) : (
+        <>
+          <Typography variant="subtitle1">
+            Last updated {moment(updated).fromNow()}.
+          </Typography>
+          <Button
+            disabled={hasCounterChanged}
+            onClick={() => {
+              addCocktailsRecord({
+                variables: {
+                  counter: JSON.stringify(counter),
+                  lastModified: moment()
+                }
+              }).then(({ data }) => {
+                const { addCocktailsRecord: newRecord } = data;
+                prevCount = JSON.parse(newRecord.counter);
+                prevModified = newRecord.lastModified;
+                setCounter(JSON.parse(newRecord.counter));
+                setUpdated(newRecord.lastModified);
+              });
+            }}
+            css={`
+              background-color: lightblue;
+              margin: 0 0 15px 0;
+            `}
+          >
+            Save changes
+          </Button>
+          {Object.entries(counter).map(([key, value], index) => (
+            <CocktailWidget cocktail={key} count={value} key={index} />
+          ))}
+          <Button
+            onClick={() => {
+              const zeroCount = {};
+              Object.keys(counter).forEach(cocktail => {
+                zeroCount[cocktail] = 0;
+              });
+              setCounter(zeroCount);
+            }}
+            css={`
+              margin: 15px 0;
+              background: lightcoral;
+            `}
+          >
+            set all counters to 0
+          </Button>
+        </>
+      )}
     </Container>
   );
 };
