@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Hidden from "@material-ui/core/Hidden";
@@ -5,10 +7,14 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Paper from "@material-ui/core/Paper";
 import Select from "@material-ui/core/Select";
 import Typography from "@material-ui/core/Typography";
-import React, { useEffect, useState } from "react";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { compose, graphql } from "react-apollo";
 import styled from "styled-components/macro";
-import { deleteMissingProductRecord, getMissingProductsRecordsQuery, getProductsQuery } from "../queries";
+import {
+  deleteMissingProductRecord,
+  getMissingProductsRecordsQuery,
+  getProductsQuery
+} from "../queries";
 import { exclamationMark, inStock } from "../styles/icons";
 import media from "../styles/media";
 import { bars, categories } from "../utlis";
@@ -28,7 +34,6 @@ const StyledProductCard = styled(Paper)`
 `;
 
 const ImportantProductsDisplay = ({ products }) => {
-
   return (
     <Box
       css={`
@@ -43,8 +48,15 @@ const ImportantProductsDisplay = ({ products }) => {
           display: flex;
         `}
       >
-        <img width={24} src={exclamationMark} alt="" css={`margin-right: 4px;`}/>
-        <Typography variant='h6'> Highlights:</Typography>
+        <img
+          width={24}
+          src={exclamationMark}
+          alt=""
+          css={`
+            margin-right: 4px;
+          `}
+        />
+        <Typography variant="h6"> Highlights:</Typography>
       </div>
 
       <div
@@ -125,6 +137,8 @@ const MissingProductRecords = ({
   openDrawer
 }) => {
   const [selectBar, setSelectBar] = useState(latestBarValue || "All bars");
+  const loading = missingProductRecords ? false : true;
+  console.log(loading);
 
   useEffect(() => {
     latestBarValue = selectBar;
@@ -237,37 +251,44 @@ const MissingProductRecords = ({
   return (
     <>
       <Container>
-        <div
-          css={`
-            display: flex;
-            justify-content: center;
-            align-items: baseline;
-          `}
-        >
-          <Typography variant="button">Show missing products for:</Typography>
-          <Select
+        {loading ? (
+          <CircularProgress
             css={`
-              margin-left: 0.75rem;
+              margin: 35vh 0 35vh 35vw;
+              ${media.down.sm`margin-left: 47vw;`} 
             `}
-            value={selectBar}
-            onChange={event => {
-              setSelectBar(event.target.value);
-              return;
-            }}
+          />
+        ) : (
+          <div
+            css={`
+              display: flex;
+              justify-content: center;
+              align-items: baseline;
+            `}
           >
-            <MenuItem value={"All bars"}>All bars</MenuItem>
-            {bars.map((bar, index) => (
-              <MenuItem key={index} value={bar}>
-                {bar}
-              </MenuItem>
-            ))}
-          </Select>
-        </div>
-
+            <Typography variant="button">Show missing products for:</Typography>
+            <Select
+              css={`
+                margin-left: 0.75rem;
+              `}
+              value={selectBar}
+              onChange={event => {
+                setSelectBar(event.target.value);
+                return;
+              }}
+            >
+              <MenuItem value={"All bars"}>All bars</MenuItem>
+              {bars.map((bar, index) => (
+                <MenuItem key={index} value={bar}>
+                  {bar}
+                </MenuItem>
+              ))}
+            </Select>
+          </div>
+        )}
         {Boolean(importantProducts.length) && (
           <ImportantProductsDisplay products={importantProducts} />
         )}
-
         {missingProductRecordsByBarAndCategory &&
           Object.keys(missingProductRecordsByBarAndCategory).map(
             (category, index) => {
