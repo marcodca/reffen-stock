@@ -30,8 +30,6 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
 
   let loading = cocktailsCounter ? false : true;
 
-  console.log("loading", loading);
-
   const lastRecord = cocktailsCounter
     ? cocktailsCounter[cocktailsCounter.length - 1]
     : { counter: "{}" };
@@ -48,8 +46,6 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
     setUpdated(prevModified || lastModified);
     // eslint-disable-next-line
   }, [getCocktailsCounter]);
-
-  const newCocktailsCounter = { ...counter };
 
   const lastReference = prevCount ? prevCount : lastCount;
   const hasCounterChanged =
@@ -190,9 +186,11 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
   return (
     <Container>
       {loading ? (
-        <CircularProgress css={`
-        margin-top: 35vh;
-        `}/>
+        <CircularProgress
+          css={`
+            margin-top: 35vh;
+          `}
+        />
       ) : (
         <>
           <Typography variant="subtitle1">

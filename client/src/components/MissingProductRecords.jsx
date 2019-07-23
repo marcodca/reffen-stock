@@ -255,10 +255,10 @@ const MissingProductRecords = ({
           <CircularProgress
             css={`
               margin: 35vh 0 35vh 35vw;
-              ${media.down.sm`margin-left: 47vw;`} 
+              ${media.down.sm`margin-left: 47vw;`}
             `}
           />
-        ) : (
+        ) : missingProductRecords.length ? (
           <div
             css={`
               display: flex;
@@ -285,6 +285,16 @@ const MissingProductRecords = ({
               ))}
             </Select>
           </div>
+        ) : (
+          <Typography
+            variant="h6"
+            css={`
+              margin: 35vh 0;
+            `}
+            align="center"
+          >
+            We are missing nothing at the moment, YAAY!
+          </Typography>
         )}
         {Boolean(importantProducts.length) && (
           <ImportantProductsDisplay products={importantProducts} />
