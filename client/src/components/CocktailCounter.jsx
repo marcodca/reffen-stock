@@ -3,7 +3,6 @@ import styled from "styled-components/macro";
 import media from "../styles/media";
 import { compose, graphql } from "react-apollo";
 import { getCocktailsCounter, addCocktailsRecord } from "../queries";
-import { cocktails } from "../utlis";
 import moment from "moment";
 
 import Paper from "@material-ui/core/Paper";
@@ -88,7 +87,7 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
             aria-label={`Delete 1 ${cocktail}`}
             value={cocktail}
             onClick={e => {
-              decreaseCocktailsCounter(e.target.parentElement.value);
+              decreaseCocktailsCounter(e.currentTarget.value);
             }}
             css={`
               width: 4.1em;
@@ -104,7 +103,7 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
             value={cocktail}
             size="small"
             onClick={e => {
-              decreaseCocktailsCounter(e.target.parentElement.value, 0.25);
+              decreaseCocktailsCounter(e.currentTarget.value, 0.25);
             }}
             css={`
               margin: 4px 4px -6px 0;
@@ -141,7 +140,7 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
             aria-label={`Add 0.25 ${cocktail}`}
             value={cocktail}
             onClick={e => {
-              increaseCocktailsCounter(e.target.parentElement.value, 0.25);
+              increaseCocktailsCounter(e.currentTarget.value, 0.25);
             }}
             css={`
               margin: 4px 0 -6px 4px;
@@ -154,7 +153,7 @@ const CocktailCounter = ({ getCocktailsCounter, addCocktailsRecord }) => {
             aria-label={`Add 1 ${cocktail}`}
             value={cocktail}
             onClick={e => {
-              increaseCocktailsCounter(e.target.parentElement.value);
+              increaseCocktailsCounter(e.currentTarget.value);
             }}
             css={`
               margin: -6px 4px 0 4px;
