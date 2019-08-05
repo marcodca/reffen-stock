@@ -41,12 +41,4 @@ export const bars = [
   "Bang-truck"
 ];
 
-export const cocktails = [
-  "Aperol",
-  "Mojito",
-  "Daquiri",
-  "Sangria",
-  "Elderflower",
-  "Basil"
-];
 
