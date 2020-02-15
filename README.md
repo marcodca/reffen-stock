@@ -1,9 +1,9 @@
 # Reffen stock
 
 A full-stack web app for keeping track of missing products in an inventory. Built with Node, Express, React and GraphQL. The app is fully responsive and is intended to give a good user experience on mobile. It has progressive web app functionality included.
-<p align="center">
   [Link to the app.](https://reffen-stock.herokuapp.com/)
 
+<p align="center">
 <img width="460" height="300" src="https://i.ibb.co/rbB0X5D/reffen.png">
 </p>
 
